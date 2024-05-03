@@ -11,5 +11,8 @@
     "url": "git+https://github.com/AryanK1511/fragments.git"
   },
   "author": "Aryan Khurana",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "prettier": "3.2.5"
+  }
 }
