@@ -7,7 +7,7 @@
     "proseWrap": "preserve",
     "requirePragma": false,
     "singleQuote": true,
-    "tabWidth": 4,
+    "tabWidth": 2,
     "trailingComma": "es5",
     "useTabs": false,
     "printWidth": 100
