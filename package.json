@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "description": "Fragments back-end API",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --config .eslintrc.js \"./src/**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -13,6 +14,9 @@
   "author": "Aryan Khurana",
   "license": "UNLICENSED",
   "devDependencies": {
+    "@eslint/js": "^9.1.1",
+    "eslint": "^9.1.1",
+    "globals": "^15.1.0",
     "prettier": "3.2.5"
   }
 }
