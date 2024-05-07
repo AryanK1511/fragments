@@ -21,6 +21,11 @@ app.use(cors());
 // Use gzip/deflate compression middleware
 app.use(compression());
 
+// Log environment variables if debug mode is on
+if (logger.debug) {
+  logger.debug({ processEnvironmentVariables: process.env }, 'Process Environment Variables');
+}
+
 // ===== Health Check Route to see whether the server is running =====
 app.get('/', (req, res) => {
   // Clients shouldn't cache this response (always request it fresh)
