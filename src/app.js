@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
-const { author, version, repository } = require('../package.json');
 const logger = require('./logger');
 const pino = require('pino-http')({ logger }); // Use the default logger instance, which is already configured
 
@@ -26,19 +25,8 @@ if (logger.debug) {
   logger.debug({ processEnvironmentVariables: process.env }, 'Process Environment Variables');
 }
 
-// ===== Health Check Route to see whether the server is running =====
-app.get('/', (req, res) => {
-  // Clients shouldn't cache this response (always request it fresh)
-  res.setHeader('Cache-Control', 'no-cache');
-
-  // Send a 200 'OK' response with info about project repo
-  res.status(200).json({
-    status: 'ok',
-    author,
-    githubUrl: repository.url.replace(/^git\+|\.git$/g, ''),
-    version,
-  });
-});
+// Define our routes
+app.use('/', require('./routes'));
 
 // Add 404 middleware to handle any requests for resources that can't be found
 app.use((req, res) => {

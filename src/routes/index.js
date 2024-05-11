@@ -1,0 +1,24 @@
+const express = require('express');
+const { version, author, repository } = require('../../package.json');
+
+// Create a router that we can use to mount our API
+const router = express.Router();
+
+// Expose all of our API routes on /v1/* to include an API version.
+router.use(`/v1`, require('./api'));
+
+// ===== Health Check Route to see whether the server is running =====
+router.get('/', (req, res) => {
+  // Clients shouldn't cache this response (always request it fresh)
+  res.setHeader('Cache-Control', 'no-cache');
+
+  // Send a 200 'OK' response with info about project repo
+  res.status(200).json({
+    status: 'ok',
+    author,
+    githubUrl: repository.url.replace(/^git\+|\.git$/g, ''),
+    version,
+  });
+});
+
+module.exports = router;
