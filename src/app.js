@@ -3,6 +3,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const logger = require('./logger');
+const passport = require('passport');
+const authenticate = require('./utils/auth');
 const pino = require('pino-http')({ logger }); // Use the default logger instance, which is already configured
 
 // Create an express app instance
@@ -17,13 +19,17 @@ app.use(helmet());
 // Use CORS middleware to make requests across origins
 app.use(cors());
 
+// Set up our passport authentication middleware
+passport.use(authenticate.strategy());
+app.use(passport.initialize());
+
 // Use gzip/deflate compression middleware
 app.use(compression());
 
 // Log environment variables if debug mode is on
-if (logger.debug) {
-  logger.debug({ processEnvironmentVariables: process.env }, 'Process Environment Variables');
-}
+// if (logger.debug) {
+// logger.debug({ processEnvironmentVariables: process.env }, 'Process Environment Variables');
+// }
 
 // Define our routes
 app.use('/', require('./routes'));
