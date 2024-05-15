@@ -27,9 +27,9 @@ app.use(passport.initialize());
 app.use(compression());
 
 // Log environment variables if debug mode is on
-// if (logger.debug) {
-// logger.debug({ processEnvironmentVariables: process.env }, 'Process Environment Variables');
-// }
+if (logger.debug) {
+  logger.debug({ processEnvironmentVariables: process.env }, 'Process Environment Variables');
+}
 
 // Define our routes
 app.use('/', require('./routes'));
