@@ -6,6 +6,7 @@ const logger = require('./logger');
 const passport = require('passport');
 const authenticate = require('./utils/auth');
 const pino = require('pino-http')({ logger }); // Use the default logger instance, which is already configured
+const { createErrorResponse } = require('./response');
 
 // Create an express app instance
 const app = express();
@@ -36,13 +37,7 @@ app.use('/', require('./routes'));
 
 // Add 404 middleware to handle any requests for resources that can't be found
 app.use((req, res) => {
-  res.status(404).json({
-    status: 'error',
-    error: {
-      message: 'not found',
-      code: 404,
-    },
-  });
+  res.status(404).json(createErrorResponse(404, 'not found'));
 });
 
 // Add error-handling middleware to deal with anything else
@@ -57,13 +52,7 @@ app.use((err, req, res, next) => {
     logger.error({ err }, `Error processing request`);
   }
 
-  res.status(status).json({
-    status: 'error',
-    error: {
-      message,
-      code: status,
-    },
-  });
+  res.status(status).json(createErrorResponse(status, message));
 });
 
 // Export `app` for access it in server.js

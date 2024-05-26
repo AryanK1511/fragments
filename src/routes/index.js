@@ -1,6 +1,7 @@
 const express = require('express');
 const { version, author, repository } = require('../../package.json');
 const { authenticate } = require('../utils/auth');
+const { createSuccessResponse } = require('../response');
 
 // Create a router that we can use to mount our API
 const router = express.Router();
@@ -13,13 +14,15 @@ router.get('/', (req, res) => {
   // Clients shouldn't cache this response (always request it fresh)
   res.setHeader('Cache-Control', 'no-cache');
 
-  // Send a 200 'OK' response with info about project repo
-  res.status(200).json({
-    status: 'ok',
-    author,
-    githubUrl: repository.url.replace(/^git\+|\.git$/g, ''),
-    version,
-  });
+  // Return the GitHub Repo details
+  res.status(200).json(
+    createSuccessResponse({
+      status: 'ok',
+      author,
+      githubUrl: repository.url.replace(/^git\+|\.git$/g, ''),
+      version,
+    })
+  );
 });
 
 module.exports = router;
