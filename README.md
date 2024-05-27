@@ -2,6 +2,35 @@
 
 Cloud-based CRUD microservice for managing fragments of text and images accessible through a RESTful API and deployed on AWS.
 
+## Languages
+
+- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+
+## Frameworks and Libraries
+
+- [Express](https://expressjs.com/)
+- [Passport](http://www.passportjs.org/)
+- [passport-http-bearer](http://www.passportjs.org/packages/passport-http-bearer/)
+- [aws-jwt-verify](https://github.com/awslabs/aws-jwt-verify)
+- [compression](https://www.npmjs.com/package/compression)
+- [cors](https://www.npmjs.com/package/cors)
+- [dotenv](https://www.npmjs.com/package/dotenv)
+- [helmet](https://helmetjs.github.io/)
+- [http-auth](https://www.npmjs.com/package/http-auth)
+- [http-auth-passport](https://www.npmjs.com/package/http-auth-passport)
+- [pino](https://getpino.io/)
+- [pino-http](https://github.com/pinojs/pino-http)
+- [pino-pretty](https://github.com/pinojs/pino-pretty)
+- [stoppable](https://www.npmjs.com/package/stoppable)
+
+## Development Tools
+
+- [Nodemon](https://nodemon.io/)
+- [Jest](https://jestjs.io/)
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [Supertest](https://github.com/visionmedia/supertest)
+
 ## How to run this project?
 
 Clone this repository on your local computer and run the following command in the root of your project folder to install all the dependencies related to this project:
@@ -51,28 +80,6 @@ To run the Express server, use the following command:
 ```bash
 npm start
 ```
-
-## Installed Dependencies
-
-| Dependency             | Purpose                                                                                                                                 |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `aws-jwt-verify`       | Used for verifying AWS JWT tokens.                                                                                                      |
-| `compression`          | Middleware for compressing HTTP responses to reduce file size and improve speed.                                                        |
-| `cors`                 | Middleware for enabling Cross-Origin Resource Sharing (CORS) in Express.js.                                                             |
-| `dotenv`               | Used for loading environment variables from a `.env` file into `process.env`.                                                           |
-| `express`              | Web framework for Node.js, used for building APIs and web applications.                                                                 |
-| `helmet`               | Middleware for securing Express.js apps by setting various HTTP headers.                                                                |
-| `passport`             | Authentication middleware for Node.js, used for authenticating requests.                                                                |
-| `passport-http-bearer` | Passport strategy for authenticating with a bearer token (used for API authentication).                                                 |
-| `pino`                 | Logger for Node.js applications, used for logging requests and responses.                                                               |
-| `pino-http`            | Middleware for logging HTTP requests and responses using Pino.                                                                          |
-| `pino-pretty`          | Pino plugin for pretty-printing logs in a human-readable format.                                                                        |
-| `stoppable`            | Utility for gracefully stopping a Node.js server (e.g., handling shutdown signals).                                                     |
-| `@eslint/js`           | ESLint plugin for linting JavaScript code.                                                                                              |
-| `eslint`               | JavaScript linter for identifying and reporting on patterns found in JavaScript code.                                                   |
-| `globals`              | Package for managing global variables in Node.js applications.                                                                          |
-| `nodemon`              | Utility for automatically restarting Node.js applications when file changes are detected (used in development to improve productivity). |
-| `prettier`             | Code formatter for ensuring consistent code style and formatting.                                                                       |
 
 ## Author
 
