@@ -11,8 +11,22 @@ const {
 
 // ===== FRAGMENT CLASS =====
 class Fragment {
+  // Define a dictionary of convertible types
+  static #VALID_CONVERSION = {
+    'text/plain': ['text/plain'],
+    'text/markdown': ['.md', '.html', '.txt'],
+    'text/html': ['.html', '.txt'],
+    'text/csv': ['.csv', '.txt', '.json'],
+    'application/json': ['.json', '.yaml', '.yml', '.txt'],
+    'application/yaml': ['.yaml', '.txt'],
+    'image/png': ['.png', 'jpg', '.webp', '.gif', '.avif'],
+    'image/jpeg': ['.png', 'jpg', '.webp', '.gif', '.avif'],
+    'image/webp': ['.png', 'jpg', '.webp', '.gif', '.avif'],
+    'image/avif': ['.png', 'jpg', '.webp', '.gif', '.avif'],
+    'image/gif': ['.png', 'jpg', '.webp', '.gif', '.avif'],
+  };
   // Define a set of valid base MIME types
-  static #validTypes = ['text/plain'];
+  static #validTypes = Object.keys(Fragment.#VALID_CONVERSION);
 
   // Fragment class constructor
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
@@ -135,7 +149,8 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    return Fragment.#validTypes;
+    console.log(Object.keys(Fragment.#VALID_CONVERSION));
+    return Fragment.#VALID_CONVERSION[contentType.parse(this.type).type];
   }
 
   /**
