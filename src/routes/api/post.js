@@ -34,6 +34,9 @@ module.exports = async (req, res) => {
       // Return the fragment details back to the user
       logger.info('Fragment created successfully');
 
+      // Set the location header to the location of the new fragment
+      res.location(`${req.headers.host}/v1/fragments/${fragment.id}`);
+
       res.status(201).send(createSuccessResponse({ fragment: storedFragment }));
     } else {
       // Respond with an error if a Content-Type that is not supported by the API is passed
