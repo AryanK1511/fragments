@@ -38,7 +38,9 @@ module.exports = async (req, res) => {
     } else {
       // Respond with an error if a Content-Type that is not supported by the API is passed
       logger.error('Content-Type Header not supported by API');
-      res.status(400).send(createErrorResponse(400, 'Invalid Content Type Header'));
+      res
+        .status(400)
+        .send(createErrorResponse(400, `Content-Type used in the request is not supported by API`));
     }
   } catch (error) {
     // Catch any errors that occur during the fragment creation process

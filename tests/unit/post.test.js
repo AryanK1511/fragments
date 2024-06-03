@@ -39,7 +39,7 @@ describe('POST /v1/fragments', () => {
       status: 'error',
       error: {
         code: 400,
-        message: 'Invalid Content Type Header',
+        message: 'Content-Type used in the request is not supported by API',
       },
     });
   });
