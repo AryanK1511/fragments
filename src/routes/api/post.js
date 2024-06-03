@@ -4,7 +4,7 @@ const contentType = require('content-type');
 const logger = require('../../logger');
 const hashEmail = require('../../hash');
 
-// Create a fragment for the user
+// ===== Create a fragment for the user =====
 module.exports = async (req, res) => {
   // Check if the body type is a Buffer
   if (Buffer.isBuffer(req.body)) {
