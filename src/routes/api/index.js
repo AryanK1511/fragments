@@ -1,6 +1,8 @@
 const express = require('express');
 const { Fragment } = require('../../model/fragment');
 const contentType = require('content-type');
+const { getFragmentsList } = require('./get');
+const { createFragment } = require('./post');
 
 // Middleware to parse binary blobs as body
 const rawBody = () =>
@@ -17,9 +19,9 @@ const rawBody = () =>
 const router = express.Router();
 
 // GET /v1/fragments
-router.get('/fragments', require('./get'));
+router.get('/fragments', getFragmentsList);
 
 // POST /v1/fragments
-router.post('/fragments', rawBody(), require('./post'));
+router.post('/fragments', rawBody(), createFragment);
 
 module.exports = router;
