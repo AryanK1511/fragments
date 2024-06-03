@@ -1,11 +1,5 @@
-// Use crypto.randomUUID() to create unique IDs, see:
-// https://nodejs.org/api/crypto.html#cryptorandomuuidoptions
 const { randomUUID } = require('crypto');
-
-// Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
-
-// Functions for working with fragment metadata/data using our DB
 const {
   listFragments,
   writeFragment,
@@ -15,11 +9,12 @@ const {
   deleteFragment,
 } = require('./data/memory');
 
+// ===== FRAGMENT CLASS =====
 class Fragment {
   // Define a set of valid base MIME types
   static #validTypes = ['text/plain'];
 
-  // Fragrement class constructor
+  // Fragment class constructor
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
     // Make sure owner ID and type are required
     if (!ownerId || !type) {
@@ -61,12 +56,12 @@ class Fragment {
     return userFragments;
   }
 
-  // /**
-  //  * Gets a fragment for the user by the given id.
-  //  * @param {string} ownerId user's hashed email
-  //  * @param {string} id fragment's id
-  //  * @returns Promise<Fragment>
-  //  */
+  /**
+   * Gets a fragment for the user by the given id.
+   * @param {string} ownerId user's hashed email
+   * @param {string} id fragment's id
+   * @returns Promise<Fragment>
+   */
   static async byId(ownerId, id) {
     const fragment = await readFragment(ownerId, id);
     if (!fragment) {
@@ -75,29 +70,29 @@ class Fragment {
     return fragment;
   }
 
-  // /**
-  //  * Delete the user's fragment data and metadata for the given id
-  //  * @param {string} ownerId user's hashed email
-  //  * @param {string} id fragment's id
-  //  * @returns Promise<void>
-  //  */
+  /**
+   * Delete the user's fragment data and metadata for the given id
+   * @param {string} ownerId user's hashed email
+   * @param {string} id fragment's id
+   * @returns Promise<void>
+   */
   static async delete(ownerId, id) {
     await deleteFragment(ownerId, id);
   }
 
   /**
-  //  * Saves the current fragment to the database
-  //  * @returns Promise<void>
-  //  */
+   * Saves the current fragment to the database
+   * @returns Promise<void>
+   */
   async save() {
     this.updated = new Date().toISOString();
     await writeFragment(this);
   }
 
-  // /**
-  //  * Gets the fragment's data from the database
-  //  * @returns Promise<Buffer>
-  //  */
+  /**
+   * Gets the fragment's data from the database
+   * @returns Promise<Buffer>
+   */
   async getData() {
     return await readFragmentData(this.ownerId, this.id);
   }
