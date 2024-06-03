@@ -26,20 +26,20 @@ describe('POST /v1/fragments', () => {
     expect(res.body.fragment).toHaveProperty('size');
   });
 
-  test('Should get a 400 status code from the server if a Content-Type that is not supported by the API is passed', async () => {
+  test('Should get a 415 status code from the server if a Content-Type that is not supported by the API is passed', async () => {
     const res = await request(app)
       .post('/v1/fragments')
       .auth('user1@email.com', 'password1')
       .set('Content-Type', 'application/json')
       .send('This is a fragment');
 
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(415);
 
     expect(res.body).toEqual({
       status: 'error',
       error: {
-        code: 400,
-        message: 'Content-Type used in the request is not supported by API',
+        code: 415,
+        message: 'Unsupported Content-Type',
       },
     });
   });
@@ -58,6 +58,23 @@ describe('POST /v1/fragments', () => {
       error: {
         code: 500,
         message: 'invalid media type',
+      },
+    });
+  });
+
+  test('Should get a 415 status code if no content type is provided in the request', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .send('This is a fragment');
+
+    expect(res.status).toBe(415);
+
+    expect(res.body).toEqual({
+      status: 'error',
+      error: {
+        code: 415,
+        message: 'Unsupported Content-Type',
       },
     });
   });
