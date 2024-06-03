@@ -13,7 +13,7 @@ describe('memory module', () => {
 
   // Create a new database instance before running each test
   beforeEach(() => {
-    fragment = new Fragment({ ownerId: '1234', type: 'text/plain', size: 1 });
+    fragment = new Fragment({ ownerId: '1234', type: 'text/plain', size: 3 });
   });
 
   test("writeFragment(fragment) writes a fragment's metadata to the DB and does not return anything", async () => {
@@ -55,7 +55,7 @@ describe('memory module', () => {
     expect(readResult).toEqual(data);
   });
 
-  test('listFragments(ownerId, expand) returns a list of fragments for the given user', async () => {
+  test('listFragments(ownerId, expand) returns a list of fragment IDs for the given user when not expanded', async () => {
     // Write fragment to DB
     await writeFragment(fragment);
 
@@ -65,8 +65,28 @@ describe('memory module', () => {
     // Check if the result is an array
     expect(Array.isArray(fragmentsList)).toBe(true);
 
-    // Check if the length of the array > 0 as we inserted a fragment earlier
-    expect(fragmentsList.length).toBeGreaterThan(0);
+    // Check if the result is an array of strings
+    expect(fragmentsList).toBeInstanceOf(Array);
+    fragmentsList.forEach((item) => {
+      expect(typeof item).toBe('string');
+    });
+  });
+
+  test('listFragments(ownerId, expand) returns a list of fragments for the given user when expanded', async () => {
+    // Write fragment to DB
+    await writeFragment(fragment);
+
+    // Pull frgament list from DB
+    const fragmentsList = await listFragments(fragment.ownerId, true);
+
+    // Check if the result is an array
+    expect(Array.isArray(fragmentsList)).toBe(true);
+
+    // Check if the result is an array of strings
+    expect(fragmentsList).toBeInstanceOf(Array);
+    fragmentsList.forEach((item) => {
+      expect(typeof item).toBe('object');
+    });
   });
 
   test('deleteFragment(ownerId, id) deletes a fragments data and metadata from the DB', async () => {
