@@ -6,30 +6,43 @@ const hashEmail = require('../../hash');
 
 // ===== Create a fragment for the user =====
 module.exports = async (req, res) => {
-  // Check if the body type is a Buffer
-  if (Buffer.isBuffer(req.body)) {
-    // Hash the user's email
-    const hashedUserEmail = hashEmail(req.user);
+  try {
+    logger.info('Creating a fragment for the user');
 
-    // Get the content type
-    const { type } = contentType.parse(req);
+    // Check if the body type is a Buffer
+    if (Buffer.isBuffer(req.body)) {
+      // Hash the user's email
+      const hashedUserEmail = hashEmail(req.user);
 
-    // Create a new fragment
-    let fragment = new Fragment({
-      ownerId: hashedUserEmail,
-      type: type,
-      size: req.body.length,
-    });
+      // Get the content type
+      const { type } = contentType.parse(req);
 
-    // Save the fragment and the data of the fragment
-    await fragment.save();
-    await fragment.save(req.body);
+      // Create a new fragment
+      let fragment = new Fragment({
+        ownerId: hashedUserEmail,
+        type: type,
+        size: req.body.length,
+      });
 
-    // Fetch the fragment once it is saved
-    const result = await Fragment.byId(hashedUserEmail, fragment.id);
+      // Save the fragment and the data of the fragment
+      await fragment.save();
+      await fragment.save(req.body);
 
-    res.status(201).send(createSuccessResponse({ fragment: result }));
-  } else {
-    res.status(400).send({ error: 'Invalid content type' });
+      // Fetch the fragment once it is saved
+      const storedFragment = await Fragment.byId(hashedUserEmail, fragment.id);
+
+      // Return the fragment details back to the user
+      logger.info('Fragment created successfully');
+
+      res.status(201).send(createSuccessResponse({ fragment: storedFragment }));
+    } else {
+      // Respond with an error if a Content-Type that is not supported by the API is passed
+      logger.error('Content-Type Header not supported by API');
+      res.status(400).send(createErrorResponse(400, 'Invalid Content Type Header'));
+    }
+  } catch (error) {
+    // Catch any errors that occur during the fragment creation process
+    logger.error('An error occurred while creating a fragment:', error);
+    res.status(500).send(createErrorResponse(500, 'Internal Server Error'));
   }
 };
