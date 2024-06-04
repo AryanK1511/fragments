@@ -21,8 +21,11 @@ module.exports.createFragment = async (req, res) => {
       });
 
       // Save the fragment and the data of the fragment
+      logger.info('Saving the fragment metadata');
       await fragment.save();
-      await fragment.save(req.body);
+
+      logger.info('Saving the fragment data');
+      await fragment.setData(req.body);
 
       // Fetch the fragment once it is saved
       const storedFragment = await Fragment.byId(req.user, fragment.id);
