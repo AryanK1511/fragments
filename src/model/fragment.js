@@ -12,21 +12,22 @@ const {
 // ===== FRAGMENT CLASS =====
 class Fragment {
   // Define a dictionary of convertible types
-  static #VALID_CONVERSION = {
+  static #CONVERSIONS = {
     'text/plain': ['text/plain'],
-    'text/markdown': ['.md', '.html', '.txt'],
-    'text/html': ['.html', '.txt'],
-    'text/csv': ['.csv', '.txt', '.json'],
-    'application/json': ['.json', '.yaml', '.yml', '.txt'],
-    'application/yaml': ['.yaml', '.txt'],
-    'image/png': ['.png', 'jpg', '.webp', '.gif', '.avif'],
-    'image/jpeg': ['.png', 'jpg', '.webp', '.gif', '.avif'],
-    'image/webp': ['.png', 'jpg', '.webp', '.gif', '.avif'],
-    'image/avif': ['.png', 'jpg', '.webp', '.gif', '.avif'],
-    'image/gif': ['.png', 'jpg', '.webp', '.gif', '.avif'],
+    'text/markdown': ['text/markdown', 'text/html', 'text/plain'],
+    'text/html': ['text/html', 'text/plain'],
+    'text/csv': ['text/csv', 'text/plain', 'application/json'],
+    'application/json': ['application/json', 'application/yaml', 'text/plain'],
+    'application/yaml': ['application/yaml', 'text/plain'],
+    'image/png': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
+    'image/jpeg': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
+    'image/webp': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
+    'image/avif': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
+    'image/gif': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
   };
+
   // Define a set of valid base MIME types
-  static #validTypes = Object.keys(Fragment.#VALID_CONVERSION);
+  static #validTypes = Object.keys(Fragment.#CONVERSIONS);
 
   // Fragment class constructor
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
@@ -140,8 +141,8 @@ class Fragment {
    * @returns {boolean} true if fragment's type is text/*
    */
   get isText() {
-    const { type } = contentType.parse(this.type);
-    return type === 'text/plain';
+    const type = this.mimeType;
+    return type.startsWith('text/');
   }
 
   /**
@@ -149,8 +150,7 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    console.log(Object.keys(Fragment.#VALID_CONVERSION));
-    return Fragment.#VALID_CONVERSION[contentType.parse(this.type).type];
+    return Fragment.#CONVERSIONS[contentType.parse(this.type).type];
   }
 
   /**
