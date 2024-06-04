@@ -90,8 +90,8 @@ PORT=XXXX
 | Variable                | Description                                                     | Configuration options                                                                             | Example            |
 | ----------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------ |
 | `NODE_ENV`              | Sets up the environment that you want to run your code in.      | `development` would enable the DEV environment and `production` would enable the PROD environment | `development`      |
-| `AWS_COGNITO_POOL_ID`   | Identifier for your Amazon Cognito User Pool.                   | N/A.                                                                                              | `us-west-2_ABC123` |
-| `AWS_COGNITO_CLIENT_ID` | Identifier for your application registered with Amazon Cognito. | N/A.                                                                                              | `abcdef123456`     |
+| `AWS_COGNITO_POOL_ID`   | Identifier for your Amazon Cognito User Pool.                   | N/A                                                                                              | `us-west-2_ABC123` |
+| `AWS_COGNITO_CLIENT_ID` | Identifier for your application registered with Amazon Cognito. | N/A                                                                                              | `abcdef123456`     |
 | `HTPASSWD_FILE`         | Path to the htpasswd file for basic authentication.             | N/A                                                                                               | `tests/.htpasswd`  |
 | `PORT`                  | Port number on which your application will listen.              | Any available port number. `8080` by default.                                                     | `3000`             |
 
