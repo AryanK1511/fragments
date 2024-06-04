@@ -177,7 +177,7 @@ describe('memory module', () => {
       // Check if the result is an array
       expect(Array.isArray(fragmentsList)).toBe(true);
 
-      // Check if the result is an array of strings
+      // Check if the result is an array of objects
       expect(fragmentsList).toBeInstanceOf(Array);
       fragmentsList.forEach((item) => {
         expect(typeof item).toBe('object');
