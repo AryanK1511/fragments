@@ -12,12 +12,15 @@ module.exports.createFragment = async (req, res) => {
     if (Buffer.isBuffer(req.body)) {
       // Get the content type
       const { type } = contentType.parse(req);
+      const size = req.body.length;
+
+      logger.info({ type, size }, 'Parsed content type and size from request');
 
       // Create a new fragment
       let fragment = new Fragment({
         ownerId: req.user, // Email is hashed already due to the middleware
         type: type,
-        size: req.body.length,
+        size: size,
       });
 
       // Save the fragment and the data of the fragment
@@ -30,7 +33,6 @@ module.exports.createFragment = async (req, res) => {
       // Fetch the fragment once it is saved
       const storedFragment = await Fragment.byId(req.user, fragment.id);
 
-      // Return the fragment details back to the user
       logger.info('Fragment created successfully');
 
       // Set the location header to the location of the new fragment
@@ -38,13 +40,11 @@ module.exports.createFragment = async (req, res) => {
 
       res.status(201).send(createSuccessResponse({ fragment: storedFragment }));
     } else {
-      // Respond with an error if a Content-Type that is not supported by the API is passed
-      logger.error('Content-Type Header not supported by API');
-      res.status(415).send(createErrorResponse(415, `Unsupported Content-Type`));
+      logger.error('Unsupported Content-Type Header');
+      res.status(415).send(createErrorResponse(415, 'Unsupported Content-Type'));
     }
   } catch (error) {
-    // Catch any errors that occur during the fragment creation process
-    logger.error('An error occurred while creating a fragment:', error);
+    logger.error({ err: error }, 'An error occurred while creating a fragment');
     res.status(500).send(createErrorResponse(500, 'Internal Server Error'));
   }
 };
