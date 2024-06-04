@@ -11,5 +11,4 @@ const server = stoppable(
   })
 );
 
-// Export our server instance so other parts of our code can access it if necessary.
 module.exports = server;

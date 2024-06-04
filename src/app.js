@@ -5,7 +5,7 @@ const compression = require('compression');
 const logger = require('./logger');
 const passport = require('passport');
 const authenticate = require('./utils/auth');
-const pino = require('pino-http')({ logger }); // Use the default logger instance, which is already configured
+const pino = require('pino-http')({ logger });
 const { createErrorResponse } = require('./response');
 
 // Create an express app instance
@@ -28,11 +28,9 @@ app.use(passport.initialize());
 app.use(compression());
 
 // Log environment variables if debug mode is on
-// if (logger.debug) {
-//   logger.debug({ processEnvironmentVariables: process.env }, 'Process Environment Variables');
-// }
+logger.debug({ processEnvironmentVariables: process.env }, 'Process Environment Variables');
 
-// Define our routes
+// Define routes
 app.use('/', require('./routes'));
 
 // Add 404 middleware to handle any requests for resources that can't be found

@@ -7,7 +7,9 @@ const logger = require('./src/logger');
 require('dotenv').config({ path: envFile });
 
 // Log a message to remind developers how to see more detail from log messages
-logger.info(`Using LOG_LEVEL=${process.env.LOG_LEVEL}. Use 'debug' in env.jest for more detail`);
+logger.info(
+  `Using LOG_LEVEL=${process.env.LOG_LEVEL} with jest. Use 'debug' in env.jest for more detail`
+);
 
 // Set our Jest options, see https://jestjs.io/docs/configuration
 module.exports = {

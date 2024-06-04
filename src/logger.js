@@ -1,7 +1,9 @@
 // Configure the logger
-const options = { level: process.env.LOG_LEVEL || 'info' };
+const options = {
+  level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
+};
 
-// Make the logs easy to read
+// Make the logs easy to read when in the development environment
 if (options.level === 'debug') {
   options.transport = {
     target: 'pino-pretty',
