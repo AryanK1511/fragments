@@ -12,7 +12,7 @@ ENV PORT=8080
 WORKDIR /app
 
 # All of the files will be copied into the working dir `./app`
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 # Install node dependencies defined in package-lock.json
 RUN npm install
