@@ -31,8 +31,30 @@ module.exports.getFragmentsList = async (req, res) => {
     }
   } catch (error) {
     // Catch any errors that occur during the fragment fetching process
-    logger.error('An error occurred while fetching the list of framents for user:', error.message);
+    logger.error('An error occurred while fetching the list of fragments for user:', error.message);
     res.status(500).send(createErrorResponse(500, 'Internal Server Error'));
+  }
+};
+
+module.exports.getFragmentInfoById = async (req, res) => {
+  const fragmentId = req.params.id;
+
+  logger.info('Request to get fragment metadata by ID for user');
+
+  try {
+    logger.info('Fetching fragment metadata by ID for user');
+    const requestFragmentMetadata = await Fragment.byId(req.user, fragmentId);
+    res.status(200).send(
+      createSuccessResponse({
+        fragment: requestFragmentMetadata,
+      })
+    );
+  } catch (error) {
+    logger.error(
+      { err: error },
+      'An error occurred while fetching a fragment metdata by ID for a user'
+    );
+    res.status(500).send(createErrorResponse(500, error.message));
   }
 };
 
