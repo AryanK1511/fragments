@@ -1,7 +1,7 @@
 const express = require('express');
 const { Fragment } = require('../../model/fragment');
 const contentType = require('content-type');
-const { getFragmentsList, getFragmentById } = require('./get');
+const { getFragmentsList, getFragmentById, getFragmentInfoById } = require('./get');
 const { createFragment } = require('./post');
 
 // Middleware to parse binary blobs as body
@@ -19,12 +19,21 @@ const rawBody = () =>
 const router = express.Router();
 
 // GET /v1/fragments
+// Returns a list of all fragment IDs for a user
+// Can use the ?expand=1 query to get an expanded list of metadata for all fragments related to the user
 router.get('/fragments', getFragmentsList);
 
 // GET /v1/fragments/:id
+// Returns the data of a fragment based on ID
+// Supports extensions and file conversions
 router.get('/fragments/:id', getFragmentById);
 
+// GET /v1/fragments/:id/info
+// Returns the metadata of a fragment based on ID
+router.get('/fragments/:id/info', getFragmentInfoById);
+
 // POST /v1/fragments
+// Creates a new fragment for the authenticated user
 router.post('/fragments', rawBody(), createFragment);
 
 module.exports = router;

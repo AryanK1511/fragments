@@ -4,9 +4,13 @@ coverage/
 node_modules/
 tests/
 !tests/.htpasswd
-.env
-.eslintrc.js
+.env*
+env.jest
+env.basic-auth
+fragments-*
+.eslint.config.mjs
 .git/
 .gitignore
 .prettier*
 jest*
+README.md
