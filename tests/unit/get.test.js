@@ -108,6 +108,15 @@ describe('GET routes', () => {
   });
 
   describe('GET /v1/fragments/:id', () => {
+    test('unauthenticated requests are denied', () =>
+      request(app).get('/v1/fragments/123').expect(401));
+
+    test('incorrect credentials are denied', () =>
+      request(app)
+        .get('/v1/fragments/123')
+        .auth('invalid@email.com', 'incorrect_password')
+        .expect(401));
+
     test('Fragment data is returned if the ID of the fragment is passed.', async () => {
       // Creatin a fragment in the database
       const createResponse = await request(app)
@@ -235,6 +244,69 @@ describe('GET routes', () => {
       // Reading the data from the database
       const readResponse = await request(app)
         .get(`/v1/fragments/${createResponse.body.fragment.id}123.html`)
+        .auth('user1@email.com', 'password1');
+
+      expect(readResponse.statusCode).toBe(500);
+      expect(readResponse.body).toEqual({
+        status: 'error',
+        error: {
+          code: 500,
+          message: 'Fragment does not exist',
+        },
+      });
+    });
+  });
+
+  describe('GET /v1/fragments/:id/info', () => {
+    test('unauthenticated requests are denied', () =>
+      request(app).get('/v1/fragments/123/info').expect(401));
+
+    test('incorrect credentials are denied', () =>
+      request(app)
+        .get('/v1/fragments/123/info')
+        .auth('invalid@email.com', 'incorrect_password')
+        .expect(401));
+
+    test('Fragment metadata is returned if the ID of the fragment is passed.', async () => {
+      // Creatin a fragment in the database
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'text/plain')
+        .send('Fragment 1');
+
+      expect(createResponse.status).toBe(201);
+
+      // Reading the metadata from the database
+      const readResponse = await request(app)
+        .get(`/v1/fragments/${createResponse.body.fragment.id}/info`)
+        .auth('user1@email.com', 'password1');
+
+      expect(readResponse.statusCode).toBe(200);
+      expect(readResponse.body).toHaveProperty('status');
+      expect(readResponse.body.status).toBe('ok');
+      expect(readResponse.body).toHaveProperty('fragment');
+      expect(readResponse.body.fragment).toHaveProperty('id');
+      expect(readResponse.body.fragment).toHaveProperty('ownerId');
+      expect(readResponse.body.fragment).toHaveProperty('created');
+      expect(readResponse.body.fragment).toHaveProperty('updated');
+      expect(readResponse.body.fragment).toHaveProperty('type');
+      expect(readResponse.body.fragment).toHaveProperty('size');
+    });
+
+    test('An error response is displayed if an invalid fragment ID is passed', async () => {
+      // Creatin a fragment in the database
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'text/plain')
+        .send('Fragment 1');
+
+      expect(createResponse.status).toBe(201);
+
+      // Reading the data from the database
+      const readResponse = await request(app)
+        .get(`/v1/fragments/${createResponse.body.fragment.id}123/info`)
         .auth('user1@email.com', 'password1');
 
       expect(readResponse.statusCode).toBe(500);
