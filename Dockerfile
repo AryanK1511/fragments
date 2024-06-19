@@ -12,7 +12,7 @@ COPY package.json package-lock.json ./
 # Install all the production dependencies using the package-lock.json file
 RUN npm ci --only=production
 
-# ==================== Stage 1: Install all the base dependencies ====================
+# ==================== Stage 1: Run the node server ====================
 
 # Using a smaller (apline) version of node after the dependencies are installed
 FROM --platform=linux/amd64 node:20.11.0-alpine3.19@sha256:2f46fd49c767554c089a5eb219115313b72748d8f62f5eccb58ef52bc36db4ad AS production
