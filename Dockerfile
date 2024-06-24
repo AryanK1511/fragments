@@ -1,7 +1,7 @@
 # ==================== Stage 0: Install all the base dependencies ====================
 
 # Using the larger version of node to install the dependencies
-FROM --platform=linux/amd64 node:20.11.0@sha256:7bf4a586b423aac858176b3f683e35f08575c84500fbcfd1d433ad8568972ec6 AS dependencies
+FROM node:20.11.0@sha256:7bf4a586b423aac858176b3f683e35f08575c84500fbcfd1d433ad8568972ec6 AS dependencies
 
 # Set working directory
 WORKDIR /app
@@ -15,7 +15,7 @@ RUN npm ci --only=production
 # ==================== Stage 1: Run the node server ====================
 
 # Using a smaller (apline) version of node after the dependencies are installed
-FROM --platform=linux/amd64 node:20.11.0-alpine3.19@sha256:2f46fd49c767554c089a5eb219115313b72748d8f62f5eccb58ef52bc36db4ad AS production
+FROM node:20.11.0-alpine3.19@sha256:2f46fd49c767554c089a5eb219115313b72748d8f62f5eccb58ef52bc36db4ad AS production
 
 # Metadata
 LABEL maintainer="Aryan Khurana <akhurana22@myseneca.ca>"\
