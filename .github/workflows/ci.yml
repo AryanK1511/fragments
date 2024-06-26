@@ -100,6 +100,7 @@ jobs:
           SHA_TAG: sha-${{ github.sha }}
         uses: docker/build-push-action@v6
         with:
+          platforms: linux/amd64,linux/arm64
           push: true
           # Use 3 tags :sha-sha-7d821bd14e0d6c381dc57a5369ae1a3a9220664f, :main, and :latest
           tags: ${{ env.DOCKERHUB_REPO }}:${{ env.SHA_TAG }}, ${{ env.DOCKERHUB_REPO }}:main, ${{ env.DOCKERHUB_REPO }}:latest
