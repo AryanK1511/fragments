@@ -1,0 +1,2 @@
+setup_docker_env_file_source: ../.env
+setup_docker_env_file_destination: '{{ setup_docker_target_dir }}/.env'
