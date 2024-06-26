@@ -1,5 +1,6 @@
-# Ansible automation scripts
-ansible/
+# Ansible automation secrets
+credentials.yml
+hosts.txt
 
 # Logs
 logs
