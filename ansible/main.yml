@@ -1,7 +1,7 @@
 - name: Initial Inventory Setup
   hosts: localhost
   tasks:
-    - name: Setup Docker on the host machines
+    - name: Set up dynamic inventory
       ansible.builtin.import_role:
         name: dynamic_inventory
 
