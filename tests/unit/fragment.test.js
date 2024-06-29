@@ -20,7 +20,7 @@ const validTypes = [
 ];
 
 describe('Fragment class', () => {
-  test('common formats are supported', () => {
+  test('Common formats are supported', () => {
     validTypes.forEach((format) => expect(Fragment.isSupportedType(format)).toBe(true));
   });
 
@@ -68,27 +68,27 @@ describe('Fragment class', () => {
       expect(() => new Fragment({ ownerId: '1234', type: 'text/plain', size: -1 })).toThrow();
     });
 
-    test('invalid types throw', () => {
+    test('Invalid types throw', () => {
       expect(
         () => new Fragment({ ownerId: '1234', type: 'application/msword', size: 1 })
       ).toThrow();
     });
 
-    test('valid types can be set', () => {
+    test('Valid types can be set', () => {
       validTypes.forEach((format) => {
         const fragment = new Fragment({ ownerId: '1234', type: format, size: 1 });
         expect(fragment.type).toEqual(format);
       });
     });
 
-    test('fragments have an id', () => {
+    test('Fragments have an id', () => {
       const fragment = new Fragment({ ownerId: '1234', type: 'text/plain', size: 1 });
       expect(fragment.id).toMatch(
         /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/
       );
     });
 
-    test('fragments use id passed in if present', () => {
+    test('Fragments use id passed in if present', () => {
       const fragment = new Fragment({
         id: 'id',
         ownerId: '1234',
@@ -98,7 +98,7 @@ describe('Fragment class', () => {
       expect(fragment.id).toEqual('id');
     });
 
-    test('fragments get a created datetime string', () => {
+    test('Fragments get a created datetime string', () => {
       const fragment = new Fragment({
         ownerId: '1234',
         type: 'text/plain',
@@ -107,7 +107,7 @@ describe('Fragment class', () => {
       expect(Date.parse(fragment.created)).not.toBeNaN();
     });
 
-    test('fragments get an updated datetime string', () => {
+    test('Fragments get an updated datetime string', () => {
       const fragment = new Fragment({
         ownerId: '1234',
         type: 'text/plain',
@@ -209,7 +209,7 @@ describe('Fragment class', () => {
       expect(Date.parse(fragment2.updated)).toBeGreaterThan(Date.parse(modified1));
     });
 
-    test("a fragment is added to the list of a user's fragments", async () => {
+    test("A fragment is added to the list of a user's fragments", async () => {
       const data = Buffer.from('hello');
       const ownerId = '5555';
       const fragment = new Fragment({ ownerId, type: 'text/plain', size: 0 });
@@ -219,7 +219,7 @@ describe('Fragment class', () => {
       expect(await Fragment.byUser(ownerId)).toEqual([fragment.id]);
     });
 
-    test('full fragments are returned when requested for a user', async () => {
+    test('Full fragments are returned when requested for a user', async () => {
       const data = Buffer.from('hello');
       const ownerId = '6666';
       const fragment = new Fragment({ ownerId, type: 'text/plain', size: 0 });
@@ -245,7 +245,7 @@ describe('Fragment class', () => {
       expect(size).toBe(2);
     });
 
-    test('a fragment can be deleted', async () => {
+    test('A fragment can be deleted', async () => {
       const fragment = new Fragment({ ownerId: '1234', type: 'text/plain', size: 0 });
       await fragment.save();
       await fragment.setData(Buffer.from('a'));
