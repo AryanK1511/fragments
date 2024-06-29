@@ -15,6 +15,11 @@ module.exports.createFragment = async (req, res) => {
       return res.status(415).send(createErrorResponse(415, 'Unsupported Content-Type'));
     }
 
+    if (!(req.body.length > 0)) {
+      logger.error('Fragment cannot be null');
+      return res.status(400).send(createErrorResponse(400, 'Fragment cannot be null'));
+    }
+
     // Parse the content type from the request
     const { type } = contentType.parse(req);
     const size = req.body.length;
