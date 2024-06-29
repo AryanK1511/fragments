@@ -1,3 +1,6 @@
+# Misc
+.DS_Store
+
 # Ansible automation secrets
 credentials.yml
 hosts.txt
