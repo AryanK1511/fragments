@@ -30,16 +30,6 @@
         AWS_DEFAULT_REGION: us-east-1
       changed_when: false
 
-    - name: Login so that docker images can be pulled from ECR
-      ansible.builtin.command: >
-        docker login -u AWS -p {{ token.stdout }} {{ aws_ecr_registry_name }}
-      environment:
-        AWS_ACCESS_KEY_ID: '{{ aws_access_key_id }}'
-        AWS_SECRET_ACCESS_KEY: '{{ aws_secret_access_key }}'
-        AWS_SESSION_TOKEN: '{{ aws_session_token }}'
-        AWS_DEFAULT_REGION: us-east-1
-      changed_when: false
-
   rescue:
     - name: Fail job and display error message
       ansible.builtin.fail:

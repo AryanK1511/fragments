@@ -14,10 +14,10 @@ class Fragment {
   // Define a dictionary of convertible types
   static #CONVERSIONS = {
     'text/plain': ['text/plain'],
-    // 'text/markdown': ['text/markdown', 'text/html', 'text/plain'],
-    // 'text/html': ['text/html', 'text/plain'],
-    // 'text/csv': ['text/csv', 'text/plain', 'application/json'],
-    // 'application/json': ['application/json', 'application/yaml', 'text/plain'],
+    'text/markdown': ['text/markdown', 'text/html', 'text/plain'],
+    'text/html': ['text/html', 'text/plain'],
+    'text/csv': ['text/csv', 'text/plain', 'application/json'],
+    'application/json': ['application/json', 'application/yaml', 'text/plain'],
     // 'application/yaml': ['application/yaml', 'text/plain'],
     // 'image/png': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
     // 'image/jpeg': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
@@ -25,9 +25,6 @@ class Fragment {
     // 'image/avif': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
     // 'image/gif': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
   };
-
-  // Define a set of valid base MIME types
-  static #validTypes = Object.keys(Fragment.#CONVERSIONS);
 
   // Fragment class constructor
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
@@ -161,8 +158,7 @@ class Fragment {
   static isSupportedType(value) {
     // Parse the value
     let parsedValue = contentType.parse(value);
-
-    return Fragment.#validTypes.includes(parsedValue.type);
+    return Object.keys(Fragment.#CONVERSIONS).includes(parsedValue.type);
   }
 }
 

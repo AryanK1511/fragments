@@ -1,7 +1,8 @@
 const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
 const { createSuccessResponse, createErrorResponse } = require('../../response');
-const { TYPES_MAPPING } = require('../../utils/mappings');
+const { TYPES_MAPPING } = require('../../utils/tools/mappings');
+const { handleTypeConversion } = require('../../utils/tools/handleTypeConversion');
 
 // ===== Get a list of fragments for the current user =====
 module.exports.getFragmentsList = async (req, res) => {
@@ -36,6 +37,7 @@ module.exports.getFragmentsList = async (req, res) => {
   }
 };
 
+// ===== Get a sepcific fragment metadata by ID for the current user =====
 module.exports.getFragmentInfoById = async (req, res) => {
   const fragmentId = req.params.id;
 
@@ -58,7 +60,9 @@ module.exports.getFragmentInfoById = async (req, res) => {
   }
 };
 
+// ===== Get a sepcific fragment data by ID for the current user =====
 module.exports.getFragmentById = async (req, res) => {
+  // Get the id of the fragment and the extension that it uses (if any)
   const [fragmentId, extension] = req.params.id.split('.');
 
   logger.info('Request to get fragment by ID for user');
@@ -66,23 +70,30 @@ module.exports.getFragmentById = async (req, res) => {
   try {
     logger.info('Fetching fragment by ID for user');
     const requestedFragment = await Fragment.byId(req.user, fragmentId);
-
     const fragment = new Fragment(requestedFragment);
 
     logger.info('Fetching the data of a fragment for user');
     let fragmentData = await fragment.getData();
 
-    if (extension) {
+    // Handle the conversion if an extension is provided
+    if (extension && TYPES_MAPPING[`.${extension}`] !== fragment.mimeType) {
+      const finalType = TYPES_MAPPING[`.${extension}`];
+
       logger.info({ extension }, 'Extension provided, checking for possible conversion');
 
-      if (fragment.formats.includes(TYPES_MAPPING[`.${extension}`])) {
-        logger.info('Type conversion possible');
+      // Check to see whether the type conversion is even possible
+      if (fragment.formats.includes(finalType)) {
+        logger.info('Type conversion possible. Converting the data.');
 
-        // TODO: Code to convert into the desired type
-        // For now, we just return txt
+        // Converting the data
+        const data = handleTypeConversion(fragment.mimeType, finalType, fragmentData);
+
         logger.info('Fragment data converted successfully');
-        res.status(200).send(fragmentData.toString('utf-8'));
-      } else {
+        res.status(200).send(data);
+      }
+
+      // Throw an error if the conversion is not possible
+      else {
         logger.error(
           { mimeType: fragment.mimeType, formats: fragment.formats },
           'Type conversion not possible'
@@ -97,9 +108,11 @@ module.exports.getFragmentById = async (req, res) => {
             )
           );
       }
-    } else {
-      logger.info('No extension provided, returning data in original format');
-      // Return txt for now
+    }
+
+    // If there is no conversion specified, return the original fragment data
+    else {
+      logger.info('Returning data in original format');
       res.status(200).send(fragmentData.toString('utf-8'));
     }
   } catch (error) {
