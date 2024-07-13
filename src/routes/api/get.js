@@ -91,8 +91,6 @@ module.exports.getFragmentById = async (req, res) => {
   try {
     const requestedFragment = await Fragment.byId(req.user, fragmentId);
 
-    console.log(requestedFragment);
-
     // Throw an error if the requested fragment does not exist
     if (!requestedFragment) {
       return res
