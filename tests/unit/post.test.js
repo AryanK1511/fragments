@@ -8,7 +8,7 @@ describe('POST routes', () => {
     test('Unauthenticated requests are denied', () =>
       request(app).post('/v1/fragments').expect(401));
 
-    test('incorrect credentials are denied', () =>
+    test('Incorrect credentials are denied', () =>
       request(app)
         .post('/v1/fragments')
         .auth('invalid@email.com', 'incorrect_password')
@@ -25,14 +25,45 @@ describe('POST routes', () => {
         .send(fileContent);
 
       expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty('status');
-      expect(res.body).toHaveProperty('fragment');
-      expect(res.body.fragment).toHaveProperty('id');
-      expect(res.body.fragment).toHaveProperty('ownerId');
-      expect(res.body.fragment).toHaveProperty('created');
-      expect(res.body.fragment).toHaveProperty('updated');
-      expect(res.body.fragment).toHaveProperty('type');
-      expect(res.body.fragment).toHaveProperty('size');
+      expect(res.body.status).toBe('ok');
+
+      const fragment = res.body.fragment;
+      expect(fragment).toBeDefined();
+
+      expect(fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'text/plain',
+        size: 33,
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
+    });
+
+    test('Authenticated users can create a text fragment with a charset successfully', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.txt');
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+
+      const res = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'text/plain; charset=utf-8')
+        .send(fileContent);
+
+      expect(res.status).toBe(201);
+      expect(res.body.status).toBe('ok');
+
+      const fragment = res.body.fragment;
+      expect(fragment).toBeDefined();
+
+      expect(fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'text/plain; charset=utf-8',
+        size: 33,
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
     });
 
     test('Authenticated users can create an HTML fragment successfully', async () => {
@@ -46,14 +77,19 @@ describe('POST routes', () => {
         .send(fileContent);
 
       expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty('status');
-      expect(res.body).toHaveProperty('fragment');
-      expect(res.body.fragment).toHaveProperty('id');
-      expect(res.body.fragment).toHaveProperty('ownerId');
-      expect(res.body.fragment).toHaveProperty('created');
-      expect(res.body.fragment).toHaveProperty('updated');
-      expect(res.body.fragment).toHaveProperty('type');
-      expect(res.body.fragment).toHaveProperty('size');
+      expect(res.body.status).toBe('ok');
+
+      const fragment = res.body.fragment;
+      expect(fragment).toBeDefined();
+
+      expect(fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'text/html',
+        size: 43,
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
     });
 
     test('Authenticated users can create a markdown fragment successfully', async () => {
@@ -67,14 +103,19 @@ describe('POST routes', () => {
         .send(fileContent);
 
       expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty('status');
-      expect(res.body).toHaveProperty('fragment');
-      expect(res.body.fragment).toHaveProperty('id');
-      expect(res.body.fragment).toHaveProperty('ownerId');
-      expect(res.body.fragment).toHaveProperty('created');
-      expect(res.body.fragment).toHaveProperty('updated');
-      expect(res.body.fragment).toHaveProperty('type');
-      expect(res.body.fragment).toHaveProperty('size');
+      expect(res.body.status).toBe('ok');
+
+      const fragment = res.body.fragment;
+      expect(fragment).toBeDefined();
+
+      expect(fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'text/markdown',
+        size: 39,
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
     });
 
     test('Authenticated users can create a CSV fragment successfully', async () => {
@@ -88,14 +129,19 @@ describe('POST routes', () => {
         .send(fileContent);
 
       expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty('status');
-      expect(res.body).toHaveProperty('fragment');
-      expect(res.body.fragment).toHaveProperty('id');
-      expect(res.body.fragment).toHaveProperty('ownerId');
-      expect(res.body.fragment).toHaveProperty('created');
-      expect(res.body.fragment).toHaveProperty('updated');
-      expect(res.body.fragment).toHaveProperty('type');
-      expect(res.body.fragment).toHaveProperty('size');
+      expect(res.body.status).toBe('ok');
+
+      const fragment = res.body.fragment;
+      expect(fragment).toBeDefined();
+
+      expect(fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'text/csv',
+        size: 69,
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
     });
 
     test('Authenticated users can create a JSON fragment successfully', async () => {
@@ -109,14 +155,19 @@ describe('POST routes', () => {
         .send(fileContent);
 
       expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty('status');
-      expect(res.body).toHaveProperty('fragment');
-      expect(res.body.fragment).toHaveProperty('id');
-      expect(res.body.fragment).toHaveProperty('ownerId');
-      expect(res.body.fragment).toHaveProperty('created');
-      expect(res.body.fragment).toHaveProperty('updated');
-      expect(res.body.fragment).toHaveProperty('type');
-      expect(res.body.fragment).toHaveProperty('size');
+      expect(res.body.status).toBe('ok');
+
+      const fragment = res.body.fragment;
+      expect(fragment).toBeDefined();
+
+      expect(fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'application/json',
+        size: 66,
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
     });
 
     test('Should throw a 400 error when the request body is empty', async () => {

@@ -1,8 +1,8 @@
 const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
 const { createSuccessResponse, createErrorResponse } = require('../../response');
-const { TYPES_MAPPING } = require('../../utils/tools/mappings');
-const { handleTypeConversion } = require('../../utils/tools/handleTypeConversion');
+const { TYPES_MAPPING } = require('../../utils/types/mapping');
+const { handleTypeConversion } = require('../../utils/types/conversions');
 
 // ===== Get a list of fragments for the current user =====
 module.exports.getFragmentsList = async (req, res) => {
@@ -60,63 +60,84 @@ module.exports.getFragmentInfoById = async (req, res) => {
   }
 };
 
-// ===== Get a sepcific fragment data by ID for the current user =====
-module.exports.getFragmentById = async (req, res) => {
-  // Get the id of the fragment and the extension that it uses (if any)
-  const [fragmentId, extension] = req.params.id.split('.');
+// ===== Get a specific fragment metadata by ID for the current user =====
+module.exports.getFragmentInfoById = async (req, res) => {
+  const fragmentId = req.params.id;
 
+  logger.info('Request to get fragment metadata by ID for user');
+
+  try {
+    logger.info('Fetching fragment metadata by ID for user');
+    const requestFragmentMetadata = await Fragment.byId(req.user, fragmentId);
+    res.status(200).send(
+      createSuccessResponse({
+        fragment: requestFragmentMetadata,
+      })
+    );
+  } catch (error) {
+    logger.error(
+      { err: error },
+      'An error occurred while fetching a fragment metadata by ID for a user'
+    );
+    res.status(500).send(createErrorResponse(500, error.message));
+  }
+};
+
+// ===== Get a specific fragment data by ID for the current user =====
+module.exports.getFragmentById = async (req, res) => {
+  const [fragmentId, extension] = req.params.id.split('.');
   logger.info('Request to get fragment by ID for user');
 
   try {
-    logger.info('Fetching fragment by ID for user');
     const requestedFragment = await Fragment.byId(req.user, fragmentId);
+
+    // Throw an error if the requested fragment does not exist
+    if (!requestedFragment) {
+      return res
+        .status(404)
+        .send(createErrorResponse(404, `The requested fragment doesn't exist.`));
+    }
+
     const fragment = new Fragment(requestedFragment);
+    const fragmentData = await fragment.getData();
 
-    logger.info('Fetching the data of a fragment for user');
-    let fragmentData = await fragment.getData();
-
-    // Handle the conversion if an extension is provided
-    if (extension && TYPES_MAPPING[`.${extension}`] !== fragment.mimeType) {
-      const finalType = TYPES_MAPPING[`.${extension}`];
-
-      logger.info({ extension }, 'Extension provided, checking for possible conversion');
-
-      // Check to see whether the type conversion is even possible
-      if (fragment.formats.includes(finalType)) {
-        logger.info('Type conversion possible. Converting the data.');
-
-        // Converting the data
-        const data = handleTypeConversion(fragment.mimeType, finalType, fragmentData);
-
-        logger.info('Fragment data converted successfully');
-        res.status(200).send(data);
-      }
-
-      // Throw an error if the conversion is not possible
-      else {
-        logger.error(
-          { mimeType: fragment.mimeType, formats: fragment.formats },
-          'Type conversion not possible'
-        );
-
-        res
-          .status(415)
-          .send(
-            createErrorResponse(
-              415,
-              `Type conversion not possible. ${fragment.mimeType} can only be converted into ${fragment.formats}.`
-            )
-          );
-      }
-    }
-
-    // If there is no conversion specified, return the original fragment data
-    else {
+    // If no extension is provided by the user or the extension is the same as the fragment, the original fragment is returned
+    if (!extension || TYPES_MAPPING[`.${extension}`] === fragment.mimeType) {
       logger.info('Returning data in original format');
-      res.status(200).send(fragmentData.toString('utf-8'));
+      res.setHeader('Content-Type', fragment.type);
+      return res.status(200).send(fragmentData);
     }
+
+    // An extension exits
+    const finalType = TYPES_MAPPING[`.${extension}`];
+
+    // Convert the data if the data is convertible
+    if (fragment.formats.includes(finalType)) {
+      logger.info('Type conversion possible. Converting the data.');
+      const data = handleTypeConversion({
+        currentType: fragment.mimeType,
+        finalType: finalType,
+        fragmentData: fragmentData,
+      });
+      res.setHeader('Content-Type', finalType);
+      return res.status(200).send(data);
+    }
+
+    // Throw an error if the type conversion is not possible
+    logger.error('Type conversion not possible', {
+      mimeType: fragment.mimeType,
+      formats: fragment.formats,
+    });
+    return res
+      .status(415)
+      .send(
+        createErrorResponse(
+          415,
+          `Type conversion not possible. ${fragment.mimeType} can only be converted into ${fragment.formats}.`
+        )
+      );
   } catch (error) {
-    logger.error({ err: error }, 'An error occurred while fetching a fragment by ID for a user');
+    logger.error('Error fetching fragment by ID for user:', error.message);
     res.status(500).send(createErrorResponse(500, error.message));
   }
 };
