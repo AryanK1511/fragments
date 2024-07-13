@@ -22,8 +22,7 @@ module.exports.createFragment = async (req, res) => {
     }
 
     // Parse the content type from the request
-    const parsedContentType = contentType.parse(req);
-    const { type, parameters } = parsedContentType;
+    const { type, parameters } = contentType.parse(req);
     const charset = parameters.charset || null; // Default to null if there are no parameters specified
     const size = req.body.length;
 
