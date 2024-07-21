@@ -44,7 +44,9 @@ describe('GET routes', () => {
       // Check if the result is an array of strings
       expect(readResponse.body.fragments).toBeInstanceOf(Array);
       readResponse.body.fragments.forEach((item) => {
-        expect(typeof item).toBe('string');
+        expect(item).toEqual(
+          expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
+        );
       });
     });
 
@@ -78,12 +80,21 @@ describe('GET routes', () => {
       // Check if the result is an array of objects
       expect(readResponse.body.fragments).toBeInstanceOf(Array);
       readResponse.body.fragments.forEach((item) => {
-        expect(typeof item).toBe('object');
+        expect(item).toEqual({
+          id: expect.stringMatching(
+            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
+          ),
+          ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+          type: 'text/plain',
+          size: expect.any(Number),
+          created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+          updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        });
       });
     });
 
     test('An array of string fragment IDs is returned even if an invalid query is passed', async () => {
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -104,7 +115,9 @@ describe('GET routes', () => {
       // Check if the result is an array of strings
       expect(readResponse.body.fragments).toBeInstanceOf(Array);
       readResponse.body.fragments.forEach((item) => {
-        expect(typeof item).toBe('string');
+        expect(item).toEqual(
+          expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
+        );
       });
     });
   });
@@ -123,7 +136,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.txt');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -145,7 +158,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.txt');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -167,7 +180,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.txt');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -196,7 +209,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.json');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -223,7 +236,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.json');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -249,7 +262,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.json');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -278,7 +291,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.md');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -300,7 +313,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.md');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -322,7 +335,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.json');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -351,7 +364,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.csv');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -373,7 +386,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.csv');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -395,7 +408,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.csv');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -424,7 +437,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.html');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -446,7 +459,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.html');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -468,7 +481,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.html');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -497,7 +510,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.md');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -519,7 +532,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.json');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -545,7 +558,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.json');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -574,7 +587,7 @@ describe('GET routes', () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.csv');
       const fileContent = fs.readFileSync(filePath, 'utf8');
 
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -600,7 +613,7 @@ describe('GET routes', () => {
     });
 
     test('An error response is displayed if an invalid fragment ID is passed', async () => {
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -614,18 +627,18 @@ describe('GET routes', () => {
         .get(`/v1/fragments/${createResponse.body.fragment.id}123`)
         .auth('user1@email.com', 'password1');
 
-      expect(readResponse.statusCode).toBe(500);
+      expect(readResponse.statusCode).toBe(404);
       expect(readResponse.body).toEqual({
         status: 'error',
         error: {
-          code: 500,
-          message: 'Fragment does not exist',
+          code: 404,
+          message: "The requested fragment doesn't exist.",
         },
       });
     });
 
     test('An error response is displayed if an invalid fragment ID is passed with a valid extension', async () => {
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -639,18 +652,18 @@ describe('GET routes', () => {
         .get(`/v1/fragments/${createResponse.body.fragment.id}123.txt`)
         .auth('user1@email.com', 'password1');
 
-      expect(readResponse.statusCode).toBe(500);
+      expect(readResponse.statusCode).toBe(404);
       expect(readResponse.body).toEqual({
         status: 'error',
         error: {
-          code: 500,
-          message: 'Fragment does not exist',
+          code: 404,
+          message: "The requested fragment doesn't exist.",
         },
       });
     });
 
     test('An error response is displayed if an invalid fragment ID is passed with an invalid extension', async () => {
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -664,12 +677,12 @@ describe('GET routes', () => {
         .get(`/v1/fragments/${createResponse.body.fragment.id}123.html`)
         .auth('user1@email.com', 'password1');
 
-      expect(readResponse.statusCode).toBe(500);
+      expect(readResponse.statusCode).toBe(404);
       expect(readResponse.body).toEqual({
         status: 'error',
         error: {
-          code: 500,
-          message: 'Fragment does not exist',
+          code: 404,
+          message: "The requested fragment doesn't exist.",
         },
       });
     });
@@ -685,15 +698,18 @@ describe('GET routes', () => {
         .auth('invalid@email.com', 'incorrect_password')
         .expect(401));
 
-    test('Fragment metadata is returned if the ID of the fragment is passed.', async () => {
-      // Creatin a fragment in the database
+    test('Fragment metadata for a text fragment is returned if the ID of the fragment is passed.', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.txt');
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
         .set('Content-Type', 'text/plain')
-        .send('Fragment 1');
+        .send(fileContent);
 
       expect(createResponse.status).toBe(201);
+      expect(createResponse.body.status).toBe('ok');
 
       // Reading the metadata from the database
       const readResponse = await request(app)
@@ -704,16 +720,146 @@ describe('GET routes', () => {
       expect(readResponse.body).toHaveProperty('status');
       expect(readResponse.body.status).toBe('ok');
       expect(readResponse.body).toHaveProperty('fragment');
-      expect(readResponse.body.fragment).toHaveProperty('id');
-      expect(readResponse.body.fragment).toHaveProperty('ownerId');
-      expect(readResponse.body.fragment).toHaveProperty('created');
-      expect(readResponse.body.fragment).toHaveProperty('updated');
-      expect(readResponse.body.fragment).toHaveProperty('type');
-      expect(readResponse.body.fragment).toHaveProperty('size');
+      expect(readResponse.body.fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'text/plain',
+        size: expect.any(Number),
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
+    });
+
+    test('Fragment metadata for a csv fragment is returned if the ID of the fragment is passed.', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.csv');
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'text/csv')
+        .send(fileContent);
+
+      expect(createResponse.status).toBe(201);
+      expect(createResponse.body.status).toBe('ok');
+
+      // Reading the metadata from the database
+      const readResponse = await request(app)
+        .get(`/v1/fragments/${createResponse.body.fragment.id}/info`)
+        .auth('user1@email.com', 'password1');
+
+      expect(readResponse.statusCode).toBe(200);
+      expect(readResponse.body).toHaveProperty('status');
+      expect(readResponse.body.status).toBe('ok');
+      expect(readResponse.body).toHaveProperty('fragment');
+      expect(readResponse.body.fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'text/csv',
+        size: expect.any(Number),
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
+    });
+
+    test('Fragment metadata for a HTML fragment is returned if the ID of the fragment is passed.', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.html');
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'text/html')
+        .send(fileContent);
+
+      expect(createResponse.status).toBe(201);
+      expect(createResponse.body.status).toBe('ok');
+
+      // Reading the metadata from the database
+      const readResponse = await request(app)
+        .get(`/v1/fragments/${createResponse.body.fragment.id}/info`)
+        .auth('user1@email.com', 'password1');
+
+      expect(readResponse.statusCode).toBe(200);
+      expect(readResponse.body).toHaveProperty('status');
+      expect(readResponse.body.status).toBe('ok');
+      expect(readResponse.body).toHaveProperty('fragment');
+      expect(readResponse.body.fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'text/html',
+        size: expect.any(Number),
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
+    });
+
+    test('Fragment metadata for a JSON fragment is returned if the ID of the fragment is passed.', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.json');
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'application/json')
+        .send(fileContent);
+
+      expect(createResponse.status).toBe(201);
+      expect(createResponse.body.status).toBe('ok');
+
+      // Reading the metadata from the database
+      const readResponse = await request(app)
+        .get(`/v1/fragments/${createResponse.body.fragment.id}/info`)
+        .auth('user1@email.com', 'password1');
+
+      expect(readResponse.statusCode).toBe(200);
+      expect(readResponse.body).toHaveProperty('status');
+      expect(readResponse.body.status).toBe('ok');
+      expect(readResponse.body).toHaveProperty('fragment');
+      expect(readResponse.body.fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'application/json',
+        size: expect.any(Number),
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
+    });
+
+    test('Fragment metadata for a markdown fragment is returned if the ID of the fragment is passed.', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.csv');
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'text/markdown')
+        .send(fileContent);
+
+      expect(createResponse.status).toBe(201);
+      expect(createResponse.body.status).toBe('ok');
+
+      // Reading the metadata from the database
+      const readResponse = await request(app)
+        .get(`/v1/fragments/${createResponse.body.fragment.id}/info`)
+        .auth('user1@email.com', 'password1');
+
+      expect(readResponse.statusCode).toBe(200);
+      expect(readResponse.body).toHaveProperty('status');
+      expect(readResponse.body.status).toBe('ok');
+      expect(readResponse.body).toHaveProperty('fragment');
+      expect(readResponse.body.fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'text/markdown',
+        size: expect.any(Number),
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
     });
 
     test('An error response is displayed if an invalid fragment ID is passed', async () => {
-      // Creatin a fragment in the database
+      // Creating a fragment in the database
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
@@ -727,12 +873,12 @@ describe('GET routes', () => {
         .get(`/v1/fragments/${createResponse.body.fragment.id}123/info`)
         .auth('user1@email.com', 'password1');
 
-      expect(readResponse.statusCode).toBe(500);
+      expect(readResponse.statusCode).toBe(404);
       expect(readResponse.body).toEqual({
         status: 'error',
         error: {
-          code: 500,
-          message: 'Fragment does not exist',
+          code: 404,
+          message: "The requested fragment doesn't exist.",
         },
       });
     });
