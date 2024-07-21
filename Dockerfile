@@ -38,12 +38,6 @@ COPY --from=dependencies /app/package.json /app/package-lock.json ./
 COPY ./src ./src
 COPY ./tests/.htpasswd ./tests/.htpasswd
 
-# Change ownership of the application files inside the /app directory
-RUN chown -R node:node /app
-
-# Switch to a node (non-root) user
-USER node
-
 # Expose the application port
 EXPOSE 8080
 
