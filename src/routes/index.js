@@ -3,6 +3,7 @@ const { version, author, repository } = require('../../package.json');
 const { authenticate } = require('../utils/auth');
 const { createSuccessResponse } = require('../response');
 const logger = require('../logger');
+const { hostname } = require('os');
 
 // Create a router that we can use to mount our API
 const router = express.Router();
@@ -25,6 +26,7 @@ router.get('/', (req, res) => {
       author,
       githubUrl: repository.url.replace(/^git\+|\.git$/g, ''),
       version,
+      hostname: hostname(),
     })
   );
 });
