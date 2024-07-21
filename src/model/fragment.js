@@ -7,7 +7,7 @@ const {
   readFragment,
   readFragmentData,
   deleteFragment,
-} = require('./data/memory');
+} = require('./data');
 
 // ===== FRAGMENT CLASS =====
 class Fragment {
