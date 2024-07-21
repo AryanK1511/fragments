@@ -37,52 +37,6 @@ module.exports.getFragmentsList = async (req, res) => {
   }
 };
 
-// ===== Get a sepcific fragment metadata by ID for the current user =====
-module.exports.getFragmentInfoById = async (req, res) => {
-  const fragmentId = req.params.id;
-
-  logger.info('Request to get fragment metadata by ID for user');
-
-  try {
-    logger.info('Fetching fragment metadata by ID for user');
-    const requestFragmentMetadata = await Fragment.byId(req.user, fragmentId);
-    res.status(200).send(
-      createSuccessResponse({
-        fragment: requestFragmentMetadata,
-      })
-    );
-  } catch (error) {
-    logger.error(
-      { err: error },
-      'An error occurred while fetching a fragment metdata by ID for a user'
-    );
-    res.status(500).send(createErrorResponse(500, error.message));
-  }
-};
-
-// ===== Get a specific fragment metadata by ID for the current user =====
-module.exports.getFragmentInfoById = async (req, res) => {
-  const fragmentId = req.params.id;
-
-  logger.info('Request to get fragment metadata by ID for user');
-
-  try {
-    logger.info('Fetching fragment metadata by ID for user');
-    const requestFragmentMetadata = await Fragment.byId(req.user, fragmentId);
-    res.status(200).send(
-      createSuccessResponse({
-        fragment: requestFragmentMetadata,
-      })
-    );
-  } catch (error) {
-    logger.error(
-      { err: error },
-      'An error occurred while fetching a fragment metadata by ID for a user'
-    );
-    res.status(500).send(createErrorResponse(500, error.message));
-  }
-};
-
 // ===== Get a specific fragment data by ID for the current user =====
 module.exports.getFragmentById = async (req, res) => {
   const [fragmentId, extension] = req.params.id.split('.');
@@ -90,13 +44,6 @@ module.exports.getFragmentById = async (req, res) => {
 
   try {
     const requestedFragment = await Fragment.byId(req.user, fragmentId);
-
-    // Throw an error if the requested fragment does not exist
-    if (!requestedFragment) {
-      return res
-        .status(404)
-        .send(createErrorResponse(404, `The requested fragment doesn't exist.`));
-    }
 
     const fragment = new Fragment(requestedFragment);
     const fragmentData = await fragment.getData();
@@ -137,7 +84,44 @@ module.exports.getFragmentById = async (req, res) => {
         )
       );
   } catch (error) {
+    // Throw an error if the requested fragment does not exist
+    if (error.message === 'Fragment does not exist') {
+      logger.error('Fragment does not exist', { userId: req.user.id, fragmentId });
+      return res
+        .status(404)
+        .send(createErrorResponse(404, "The requested fragment doesn't exist."));
+    }
     logger.error('Error fetching fragment by ID for user:', error.message);
+    res.status(500).send(createErrorResponse(500, error.message));
+  }
+};
+
+// ===== Get a specific fragment metadata by ID for the current user =====
+module.exports.getFragmentInfoById = async (req, res) => {
+  const fragmentId = req.params.id;
+
+  logger.info('Request to get fragment metadata by ID for user');
+
+  try {
+    logger.info('Fetching fragment metadata by ID for user');
+    const requestFragmentMetadata = await Fragment.byId(req.user, fragmentId);
+    res.status(200).send(
+      createSuccessResponse({
+        fragment: requestFragmentMetadata,
+      })
+    );
+  } catch (error) {
+    // Throw an error if the requested fragment does not exist
+    if (error.message === 'Fragment does not exist') {
+      logger.error('Fragment does not exist', { userId: req.user.id, fragmentId });
+      return res
+        .status(404)
+        .send(createErrorResponse(404, "The requested fragment doesn't exist."));
+    }
+    logger.error(
+      { err: error },
+      'An error occurred while fetching a fragment metadata by ID for a user'
+    );
     res.status(500).send(createErrorResponse(500, error.message));
   }
 };
