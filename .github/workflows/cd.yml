@@ -66,3 +66,40 @@ jobs:
           # Use 3 tags :sha-sha-7d821bd14e0d6c381dc57a5369ae1a3a9220664f, :main, and :latest
           # Use the git tag version and `latest`
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}, ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:latest
+
+      # We need to update our fragment's Task Definition JSON
+      # (i.e., fragments-definition.json) to use the newly
+      # updated Docker Image to use (i.e., the tag we just pushed to ECR).
+      # We can also update/set the environment variables if we want.
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: update-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPO: fragments
+          VERSION_TAG: ${{ github.ref_name }}
+        with:
+          task-definition: fragments-definition.json
+          container-name: fragments
+          # Use the image we just built and pushed to ECR for this tag
+          image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}
+          # Add all the necessary environment variables, using GitHub Encrypted Secrets
+          # for any values that should not be checked into git directly.  Here are
+          # a few to get you started, but you should fill in the rest yourself.
+          environment-variables: |
+            NODE_ENV=${{ secrets.AWS_SESSION_TOKEN }}
+            AWS_COGNITO_POOL_ID=${{ secrets.AWS_COGNITO_POOL_ID }}
+            AWS_COGNITO_CLIENT_ID=${{ secrets.AWS_COGNITO_CLIENT_ID }}
+            PORT=${{ secrets.PORT }}
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+
+      # The aws-actions/amazon-ecs-deploy-task-definition action registers our newly updated task definition with our ECS cluster,
+      # and asks our ECS service to schedule it for deployment (i.e., stop existing tasks and use the new definition to deploy new ones).
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.update-task-def.outputs.task-definition }}
+          cluster: fragments-aws-cluster
+          service: fragments-service
+          wait-for-service-stability: true
