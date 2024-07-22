@@ -1,5 +1,4 @@
-# Users should be able to create a JSON fragment
-
+# 1. Try to create a text fragment
 POST http://localhost:8080/v1/fragments
 Content-Type: text/plain
 
@@ -42,7 +41,7 @@ DELETE {{url}}
 [BasicAuth]
 user1@email.com:password1
 
-HTTP 201
+HTTP 200
 Content-Type: application/json; charset=utf-8
 Content-Length: 15
 
