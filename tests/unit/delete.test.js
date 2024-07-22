@@ -32,7 +32,7 @@ describe('DELETE routes', () => {
         .delete(`/v1/fragments/${createResponse.body.fragment.id}`)
         .auth('user1@email.com', 'password1');
 
-      expect(deleteResponse.statusCode).toBe(201);
+      expect(deleteResponse.statusCode).toBe(200);
       expect(deleteResponse.body).toEqual({
         status: 'ok',
       });
@@ -56,7 +56,7 @@ describe('DELETE routes', () => {
         .delete(`/v1/fragments/${createResponse.body.fragment.id}`)
         .auth('user1@email.com', 'password1');
 
-      expect(deleteResponse.statusCode).toBe(201);
+      expect(deleteResponse.statusCode).toBe(200);
       expect(deleteResponse.body).toEqual({
         status: 'ok',
       });
@@ -80,7 +80,7 @@ describe('DELETE routes', () => {
         .delete(`/v1/fragments/${createResponse.body.fragment.id}`)
         .auth('user1@email.com', 'password1');
 
-      expect(deleteResponse.statusCode).toBe(201);
+      expect(deleteResponse.statusCode).toBe(200);
       expect(deleteResponse.body).toEqual({
         status: 'ok',
       });
@@ -104,7 +104,7 @@ describe('DELETE routes', () => {
         .delete(`/v1/fragments/${createResponse.body.fragment.id}`)
         .auth('user1@email.com', 'password1');
 
-      expect(deleteResponse.statusCode).toBe(201);
+      expect(deleteResponse.statusCode).toBe(200);
       expect(deleteResponse.body).toEqual({
         status: 'ok',
       });
@@ -128,7 +128,7 @@ describe('DELETE routes', () => {
         .delete(`/v1/fragments/${createResponse.body.fragment.id}`)
         .auth('user1@email.com', 'password1');
 
-      expect(deleteResponse.statusCode).toBe(201);
+      expect(deleteResponse.statusCode).toBe(200);
       expect(deleteResponse.body).toEqual({
         status: 'ok',
       });
