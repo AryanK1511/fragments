@@ -16,32 +16,7 @@
         }
       ],
       "essential": true,
-      "environment": [
-        {
-          "name": "AWS_COGNITO_POOL_ID",
-          "value": ""
-        },
-        {
-          "name": "AWS_REGION",
-          "value": ""
-        },
-        {
-          "name": "AWS_S3_BUCKET_NAME",
-          "value": ""
-        },
-        {
-          "name": "NODE_ENV",
-          "value": "production"
-        },
-        {
-          "name": "PORT",
-          "value": "80"
-        },
-        {
-          "name": "AWS_COGNITO_CLIENT_ID",
-          "value": ""
-        }
-      ],
+      "environment": [],
       "environmentFiles": [],
       "mountPoints": [],
       "volumesFrom": [],
