@@ -88,6 +88,7 @@ jobs:
           # a few to get you started, but you should fill in the rest yourself.
           environment-variables: |
             NODE_ENV=${{ secrets.AWS_SESSION_TOKEN }}
+            AWS_DYNAMODB_TABLE_NAME=${{ secrets.AWS_DYNAMODB_TABLE_NAME }}
             AWS_COGNITO_POOL_ID=${{ secrets.AWS_COGNITO_POOL_ID }}
             AWS_COGNITO_CLIENT_ID=${{ secrets.AWS_COGNITO_CLIENT_ID }}
             PORT=${{ secrets.PORT }}
