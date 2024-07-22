@@ -19,7 +19,7 @@ module.exports.deleteFragment = async (req, res) => {
     logger.info('Fragment data and metadata deleted successfully');
 
     // Send the success response
-    return res.status(201).send(createSuccessResponse());
+    return res.status(200).send(createSuccessResponse());
   } catch (error) {
     // Throw an error if the requested fragment does not exist
     if (error.message === 'Fragment does not exist') {
