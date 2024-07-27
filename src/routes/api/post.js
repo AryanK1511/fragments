@@ -31,7 +31,7 @@ module.exports.createFragment = async (req, res) => {
     // Check whether the fragment data matches the content type
     // If the fragment is invalid, the function throws an error
     try {
-      validateFragment(req.body, type);
+      await validateFragment(req.body, type);
     } catch (error) {
       return res
         .status(415)
