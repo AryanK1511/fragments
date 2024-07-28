@@ -1,11 +1,11 @@
-# 1. Try to create a JPEG
+# 1. Try to create a PNG
 POST http://localhost:8080/v1/fragments
-Content-Type: image/jpeg
+Content-Type: image/png
 
 [BasicAuth]
 user1@email.com:password1
 
-file, file.jpeg;
+file, file.png;
 
 HTTP 201
 
@@ -16,13 +16,13 @@ jsonpath "$.fragment.id" matches "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-
 jsonpath "$.fragment.ownerId" matches "^[0-9a-fA-F]+$"
 jsonpath "$.fragment.created" isString
 jsonpath "$.fragment.updated" isString
-jsonpath "$.fragment.type" == "image/jpeg"
-jsonpath "$.fragment.size" == 2630499
+jsonpath "$.fragment.type" == "image/png"
+jsonpath "$.fragment.size" == 1420959
 
 [Captures]
 url: header "Location"
 
-# 2. Try to get the data for the JPEG fragment that we just created
+# 2. Try to get the data for the PNG fragment that we just created
 GET {{url}}
 
 [BasicAuth]
@@ -31,12 +31,12 @@ user1@email.com:password1
 HTTP 200
 
 [Asserts]
-header "Content-Type" == "image/jpeg"
-header "Content-Length" == "2630499"
-file, file.jpeg;
+header "Content-Type" == "image/png"
+header "Content-Length" == "1420959"
+file, file.png;
 
-# 2. Try to convert the JPEG fragment that we just created into a PNG fragment
-GET {{url}}.png
+# 2. Try to convert the PNG fragment that we just created into a JPEG fragment
+GET {{url}}.jpg
 
 [BasicAuth]
 user1@email.com:password1
@@ -44,5 +44,5 @@ user1@email.com:password1
 HTTP 200
 
 [Asserts]
-header "Content-Type" == "image/png"
-header "Content-Length" == "25317226"
+header "Content-Type" == "image/jpeg"
+header "Content-Length" == "176889"
