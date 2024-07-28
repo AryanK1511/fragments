@@ -4,6 +4,7 @@ const contentType = require('content-type');
 const { getFragmentsList, getFragmentById, getFragmentInfoById } = require('./get');
 const { deleteFragment } = require('./delete');
 const { createFragment } = require('./post');
+const { updateFragmentData } = require('./put');
 
 // Middleware to parse binary blobs as body
 const rawBody = () =>
@@ -36,6 +37,10 @@ router.get('/fragments/:id/info', getFragmentInfoById);
 // POST /v1/fragments
 // Creates a new fragment for the authenticated user
 router.post('/fragments', rawBody(), createFragment);
+
+// PUT /v1/fragments/:id
+// Allows users to update an existing fragment's data
+router.put('/fragments/:id', rawBody(), updateFragmentData);
 
 // DELETE /v1/fragments/:id
 // Deletes a fragment's metadata and data
