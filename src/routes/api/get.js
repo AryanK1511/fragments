@@ -48,20 +48,20 @@ module.exports.getFragmentById = async (req, res) => {
     const fragment = new Fragment(requestedFragment);
     const fragmentData = await fragment.getData();
 
+    // Check if an extension exits
+    const finalType = TYPES_MAPPING[`.${extension}`];
+
     // If no extension is provided by the user or the extension is the same as the fragment, the original fragment is returned
-    if (!extension || TYPES_MAPPING[`.${extension}`] === fragment.mimeType) {
+    if (!extension || finalType === fragment.mimeType) {
       logger.info('Returning data in original format');
       res.setHeader('Content-Type', fragment.type);
       return res.status(200).send(fragmentData);
     }
 
-    // An extension exits
-    const finalType = TYPES_MAPPING[`.${extension}`];
-
     // Convert the data if the data is convertible
     if (fragment.formats.includes(finalType)) {
       logger.info('Type conversion possible. Converting the data.');
-      const data = handleTypeConversion({
+      const data = await handleTypeConversion({
         currentType: fragment.mimeType,
         finalType: finalType,
         fragmentData: fragmentData,
