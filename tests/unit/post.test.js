@@ -138,7 +138,7 @@ describe('POST routes', () => {
         id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
         ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
         type: 'text/csv',
-        size: 69,
+        size: 67,
         created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
         updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
       });
@@ -230,6 +230,32 @@ describe('POST routes', () => {
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
         .set('Content-Type', 'image/jpeg')
+        .send(fileContent);
+
+      expect(res.status).toBe(201);
+      expect(res.body.status).toBe('ok');
+
+      const fragment = res.body.fragment;
+      expect(fragment).toBeDefined();
+
+      expect(fragment).toEqual({
+        id: expect.stringMatching(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/),
+        ownerId: expect.stringMatching(/^[0-9a-f]{64}$/),
+        type: 'image/jpeg',
+        size: 2630499,
+        created: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+        updated: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/),
+      });
+    });
+
+    test('Authenticated users can create a JPEG fragment successfully and charset is not added even of it is specified', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.jpeg');
+      const fileContent = fs.readFileSync(filePath);
+
+      const res = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'image/jpeg; charset=utf-8')
         .send(fileContent);
 
       expect(res.status).toBe(201);
