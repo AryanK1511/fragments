@@ -2,6 +2,7 @@ const { createSuccessResponse, createErrorResponse } = require('../../response')
 const { Fragment } = require('../../model/fragment');
 const contentType = require('content-type');
 const logger = require('../../logger');
+const { CHARSET_TYPES } = require('../../utils/types/mapping');
 const { validateFragment } = require('../../utils/types/typeValidation');
 
 // ===== Create a fragment for the user =====
@@ -41,7 +42,7 @@ module.exports.createFragment = async (req, res) => {
     // Create and save the new fragment
     const fragment = new Fragment({
       ownerId: req.user, // Email is hashed already due to the middleware
-      type: charset ? `${type}; charset=${charset}` : type, // Only add the charset if it is not null
+      type: CHARSET_TYPES.includes(type) && charset ? `${type}; charset=${charset}` : type, // Only add the charset if it is not null
       size: size,
     });
 
@@ -59,7 +60,7 @@ module.exports.createFragment = async (req, res) => {
     logger.info('Fragment created successfully');
 
     // Set the location header to the location of the new fragment
-    res.location(`${req.protocol}://${req.headers.host}/v1/fragments/${fragment.id}`);
+    res.location(`${req.protocol}://${req.headers.host}/v1/fragments/${storedFragment.id}`);
 
     // Send the success response
     return res.status(201).send(createSuccessResponse({ fragment: storedFragment }));
