@@ -11,6 +11,9 @@ on:
   push:
     branches:
       - main
+    tags:
+      # Any tag starting with v... should trigger this workflow.
+      - 'v**'
 
 jobs:
   lint:
