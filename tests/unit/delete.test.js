@@ -134,6 +134,150 @@ describe('DELETE routes', () => {
       });
     });
 
+    test('Authenticated users are able to delete a YAML fragment', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.yaml');
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+
+      // Creating a fragment in the database
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'application/yaml')
+        .send(fileContent);
+
+      expect(createResponse.status).toBe(201);
+
+      // Deleting the fragment
+      const deleteResponse = await request(app)
+        .delete(`/v1/fragments/${createResponse.body.fragment.id}`)
+        .auth('user1@email.com', 'password1');
+
+      expect(deleteResponse.statusCode).toBe(200);
+      expect(deleteResponse.body).toEqual({
+        status: 'ok',
+      });
+    });
+
+    test('Authenticated users are able to delete a PNG fragment', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.png');
+      const fileContent = fs.readFileSync(filePath);
+
+      // Creating a fragment in the database
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'image/png')
+        .send(fileContent);
+
+      expect(createResponse.status).toBe(201);
+
+      // Deleting the fragment
+      const deleteResponse = await request(app)
+        .delete(`/v1/fragments/${createResponse.body.fragment.id}`)
+        .auth('user1@email.com', 'password1');
+
+      expect(deleteResponse.statusCode).toBe(200);
+      expect(deleteResponse.body).toEqual({
+        status: 'ok',
+      });
+    });
+
+    test('Authenticated users are able to delete a JPEG fragment', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.jpg');
+      const fileContent = fs.readFileSync(filePath);
+
+      // Creating a fragment in the database
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'image/jpeg')
+        .send(fileContent);
+
+      expect(createResponse.status).toBe(201);
+
+      // Deleting the fragment
+      const deleteResponse = await request(app)
+        .delete(`/v1/fragments/${createResponse.body.fragment.id}`)
+        .auth('user1@email.com', 'password1');
+
+      expect(deleteResponse.statusCode).toBe(200);
+      expect(deleteResponse.body).toEqual({
+        status: 'ok',
+      });
+    });
+
+    test('Authenticated users are able to delete a webp fragment', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.webp');
+      const fileContent = fs.readFileSync(filePath);
+
+      // Creating a fragment in the database
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'image/webp')
+        .send(fileContent);
+
+      expect(createResponse.status).toBe(201);
+
+      // Deleting the fragment
+      const deleteResponse = await request(app)
+        .delete(`/v1/fragments/${createResponse.body.fragment.id}`)
+        .auth('user1@email.com', 'password1');
+
+      expect(deleteResponse.statusCode).toBe(200);
+      expect(deleteResponse.body).toEqual({
+        status: 'ok',
+      });
+    });
+
+    test('Authenticated users are able to delete a avif fragment', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.avif');
+      const fileContent = fs.readFileSync(filePath);
+
+      // Creating a fragment in the database
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'image/avif')
+        .send(fileContent);
+
+      expect(createResponse.status).toBe(201);
+
+      // Deleting the fragment
+      const deleteResponse = await request(app)
+        .delete(`/v1/fragments/${createResponse.body.fragment.id}`)
+        .auth('user1@email.com', 'password1');
+
+      expect(deleteResponse.statusCode).toBe(200);
+      expect(deleteResponse.body).toEqual({
+        status: 'ok',
+      });
+    });
+
+    test('Authenticated users are able to delete a GIF fragment', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.gif');
+      const fileContent = fs.readFileSync(filePath);
+
+      // Creating a fragment in the database
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'image/gif')
+        .send(fileContent);
+
+      expect(createResponse.status).toBe(201);
+
+      // Deleting the fragment
+      const deleteResponse = await request(app)
+        .delete(`/v1/fragments/${createResponse.body.fragment.id}`)
+        .auth('user1@email.com', 'password1');
+
+      expect(deleteResponse.statusCode).toBe(200);
+      expect(deleteResponse.body).toEqual({
+        status: 'ok',
+      });
+    });
+
     test('An error response is displayed if an invalid fragment ID is passed', async () => {
       // Deleting the fragment
       const deleteResponse = await request(app)
