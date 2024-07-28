@@ -1,12 +1,13 @@
-# Users should be able to create a JSON fragment
-
+# 1. Try to create a JSON fragment
 POST http://localhost:8080/v1/fragments
 Content-Type: application/json
 
 [BasicAuth]
 user1@email.com:password1
 
-file, file.json;
+{
+  "key": "value"
+}
 
 HTTP 201
 
@@ -18,20 +19,29 @@ jsonpath "$.fragment.ownerId" matches "^[0-9a-fA-F]+$"
 jsonpath "$.fragment.created" isString
 jsonpath "$.fragment.updated" isString
 jsonpath "$.fragment.type" == "application/json"
-jsonpath "$.fragment.size" == 66
+jsonpath "$.fragment.size" == 20
 
 [Captures]
 url: header "Location"
 
-# 2. Try to GET the fragment we just posted by its URL
+# 2. Try to get the data for the JSON fragment that we just created
 GET {{url}}
 
 [BasicAuth]
 user1@email.com:password1
 
 HTTP 200
-Content-Type: application/json
-Content-Length: 66
 
 [Asserts]
-file, file.json;
+jsonpath "$.key" == "value"
+
+# 2. Try to convert the JSON fragment to YAML
+GET {{url}}.yaml
+
+[BasicAuth]
+user1@email.com:password1
+
+HTTP 200
+
+[Asserts]
+body == "key: value\n"
