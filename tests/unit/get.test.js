@@ -3414,14 +3414,14 @@ describe('GET routes', () => {
     test('JSON fragment can be converted to a text fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.json');
       const fileContent = fs.readFileSync(filePath, 'utf8');
-      // Creating a fragment in the database
+
       const createResponse = await request(app)
         .post('/v1/fragments')
         .auth('user1@email.com', 'password1')
         .set('Content-Type', 'application/json')
         .send(fileContent);
       expect(createResponse.status).toBe(201);
-      // Reading the data from the database
+
       const readResponse = await request(app)
         .get(`/v1/fragments/${createResponse.body.fragment.id}.txt`)
         .auth('user1@email.com', 'password1');
@@ -3435,7 +3435,6 @@ describe('GET routes', () => {
   });
 
   test('An error response is displayed if an invalid fragment ID is passed', async () => {
-    // Creating a fragment in the database
     const createResponse = await request(app)
       .post('/v1/fragments')
       .auth('user1@email.com', 'password1')
@@ -3444,7 +3443,6 @@ describe('GET routes', () => {
 
     expect(createResponse.status).toBe(201);
 
-    // Reading the data from the database
     const readResponse = await request(app)
       .get(`/v1/fragments/${createResponse.body.fragment.id}123`)
       .auth('user1@email.com', 'password1');
@@ -3460,7 +3458,6 @@ describe('GET routes', () => {
   });
 
   test('An error response is displayed if an invalid fragment ID is passed with a valid extension', async () => {
-    // Creating a fragment in the database
     const createResponse = await request(app)
       .post('/v1/fragments')
       .auth('user1@email.com', 'password1')
@@ -3469,7 +3466,6 @@ describe('GET routes', () => {
 
     expect(createResponse.status).toBe(201);
 
-    // Reading the data from the database
     const readResponse = await request(app)
       .get(`/v1/fragments/${createResponse.body.fragment.id}123.txt`)
       .auth('user1@email.com', 'password1');
@@ -3485,7 +3481,6 @@ describe('GET routes', () => {
   });
 
   test('An error response is displayed if an invalid fragment ID is passed with an invalid extension', async () => {
-    // Creating a fragment in the database
     const createResponse = await request(app)
       .post('/v1/fragments')
       .auth('user1@email.com', 'password1')
@@ -3494,7 +3489,6 @@ describe('GET routes', () => {
 
     expect(createResponse.status).toBe(201);
 
-    // Reading the data from the database
     const readResponse = await request(app)
       .get(`/v1/fragments/${createResponse.body.fragment.id}123.html`)
       .auth('user1@email.com', 'password1');
