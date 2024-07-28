@@ -1,15 +1,14 @@
-const { createSuccessResponse, createErrorResponse } = require('../../response');
+const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
 const contentType = require('content-type');
-const logger = require('../../logger');
-const { CHARSET_TYPES } = require('../../utils/types/mapping');
-const { validateFragment } = require('../../utils/types/typeValidation');
+const { createSuccessResponse, createErrorResponse } = require('../../response');
 
-// ===== Create a fragment for the user =====
-module.exports.createFragment = async (req, res) => {
+// ===== Allows users to update a fragment's data =====
+module.exports.updateFragmentData = async (req, res) => {
+  const fragmentId = req.params.id;
+  logger.info('Request to update fragment by ID for user');
+
   try {
-    logger.info('Creating a fragment for the user');
-
     // Throw an error if the body is not a Buffer and/or is not supported by our application
     if (!Buffer.isBuffer(req.body)) {
       logger.error('Unsupported Content-Type Header');
@@ -29,22 +28,20 @@ module.exports.createFragment = async (req, res) => {
 
     logger.debug({ type, charset, size }, 'Parsed content type, charset, and size from request');
 
-    // Check whether the fragment data matches the content type
-    // If the fragment is invalid, the function throws an error
-    try {
-      await validateFragment(req.body, type);
-    } catch (error) {
-      return res
-        .status(415)
-        .send(createErrorResponse(415, `Unsupported Content-Type. ${error.message}`));
-    }
+    const requestedFragment = await Fragment.byId(req.user, fragmentId);
+    const fragment = new Fragment(requestedFragment);
 
-    // Create and save the new fragment
-    const fragment = new Fragment({
-      ownerId: req.user, // Email is hashed already due to the middleware
-      type: CHARSET_TYPES.includes(type) && charset ? `${type}; charset=${charset}` : type, // Only add the charset if it is not null
-      size: size,
-    });
+    // Update the new fragment params
+    fragment.size = size;
+
+    if (type !== fragment.mimeType) {
+      logger.error("A fragment's type can not be changed after it is created.");
+      return res
+        .status(400)
+        .send(
+          createErrorResponse(400, "A fragment's type can not be changed after it is created.")
+        );
+    }
 
     // Save the fragment metadata
     logger.info('Saving the fragment metadata');
@@ -57,17 +54,22 @@ module.exports.createFragment = async (req, res) => {
     // Fetch the saved fragment
     const storedFragment = await Fragment.byId(req.user, fragment.id);
 
-    logger.info('Fragment created successfully');
+    logger.info('Fragment updated successfully');
 
-    // Set the location header to the location of the new fragment
+    // Set the location header to the location of the updated fragment
     res.location(`${req.protocol}://${req.headers.host}/v1/fragments/${storedFragment.id}`);
 
     // Send the success response
     return res.status(201).send(createSuccessResponse({ fragment: storedFragment }));
   } catch (error) {
-    logger.error({ err: error.message }, 'An error occurred while creating a fragment');
-    return res
-      .status(500)
-      .send(createErrorResponse(500, `Internal Server Error: ${error.message}`));
+    // Throw an error if the requested fragment does not exist
+    if (error.message === 'Fragment does not exist') {
+      logger.error('Fragment does not exist', { userId: req.user.id, fragmentId });
+      return res
+        .status(404)
+        .send(createErrorResponse(404, "The requested fragment doesn't exist."));
+    }
+    logger.error('Error fetching fragment by ID for user:', error.message);
+    res.status(500).send(createErrorResponse(500, error.message));
   }
 };

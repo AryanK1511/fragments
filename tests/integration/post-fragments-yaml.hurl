@@ -1,12 +1,12 @@
-# Users should be able to create a JSON fragment
+# Users should be able to create a YAML fragment
 
 POST http://localhost:8080/v1/fragments
-Content-Type: application/json
+Content-Type: application/yaml
 
 [BasicAuth]
 user1@email.com:password1
 
-file, file.json;
+file, file.yaml;
 
 HTTP 201
 
@@ -17,8 +17,8 @@ jsonpath "$.fragment.id" matches "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-
 jsonpath "$.fragment.ownerId" matches "^[0-9a-fA-F]+$"
 jsonpath "$.fragment.created" isString
 jsonpath "$.fragment.updated" isString
-jsonpath "$.fragment.type" == "application/json"
-jsonpath "$.fragment.size" == 66
+jsonpath "$.fragment.type" == "application/yaml"
+jsonpath "$.fragment.size" == 29
 
 [Captures]
 url: header "Location"
@@ -30,8 +30,8 @@ GET {{url}}
 user1@email.com:password1
 
 HTTP 200
-Content-Type: application/json
-Content-Length: 66
+Content-Type: application/yaml
+Content-Length: 29
 
 [Asserts]
-file, file.json;
+file, file.yaml;

@@ -98,6 +98,8 @@ jobs:
             PORT=${{ secrets.PORT }}
             AWS_REGION=${{ secrets.AWS_REGION }}
             AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+            USE_AWS_AUTH=${{ secrets.USE_AWS_AUTH }}
+            USE_AWS_MEMORY=${{ secrets.USE_AWS_MEMORY }}
 
       # The aws-actions/amazon-ecs-deploy-task-definition action registers our newly updated task definition with our ECS cluster,
       # and asks our ECS service to schedule it for deployment (i.e., stop existing tasks and use the new definition to deploy new ones).

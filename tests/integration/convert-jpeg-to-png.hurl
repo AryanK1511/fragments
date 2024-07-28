@@ -1,12 +1,11 @@
-# Users should be able to create a JSON fragment
-
+# 1. Try to create a JPEG
 POST http://localhost:8080/v1/fragments
-Content-Type: application/json
+Content-Type: image/jpeg
 
 [BasicAuth]
 user1@email.com:password1
 
-file, file.json;
+file, file.jpeg;
 
 HTTP 201
 
@@ -17,21 +16,33 @@ jsonpath "$.fragment.id" matches "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-
 jsonpath "$.fragment.ownerId" matches "^[0-9a-fA-F]+$"
 jsonpath "$.fragment.created" isString
 jsonpath "$.fragment.updated" isString
-jsonpath "$.fragment.type" == "application/json"
-jsonpath "$.fragment.size" == 66
+jsonpath "$.fragment.type" == "image/jpeg"
+jsonpath "$.fragment.size" == 2630499
 
 [Captures]
 url: header "Location"
 
-# 2. Try to GET the fragment we just posted by its URL
+# 2. Try to get the data for the JPEG fragment that we just created
 GET {{url}}
 
 [BasicAuth]
 user1@email.com:password1
 
 HTTP 200
-Content-Type: application/json
-Content-Length: 66
 
 [Asserts]
-file, file.json;
+header "Content-Type" == "image/jpeg"
+header "Content-Length" == "2630499"
+file, file.jpeg;
+
+# 2. Try to convert the JPEG fragment that we just created into a PNG fragment
+GET {{url}}.png
+
+[BasicAuth]
+user1@email.com:password1
+
+HTTP 200
+
+[Asserts]
+header "Content-Type" == "image/png"
+header "Content-Length" == "25317226"

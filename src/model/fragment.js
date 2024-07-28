@@ -18,12 +18,12 @@ class Fragment {
     'text/html': ['text/html', 'text/plain'],
     'text/csv': ['text/csv', 'text/plain', 'application/json'],
     'application/json': ['application/json', 'application/yaml', 'text/plain'],
-    // 'application/yaml': ['application/yaml', 'text/plain'],
-    // 'image/png': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
-    // 'image/jpeg': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
-    // 'image/webp': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
-    // 'image/avif': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
-    // 'image/gif': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
+    'application/yaml': ['application/yaml', 'text/plain'],
+    'image/png': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
+    'image/jpeg': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
+    'image/webp': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
+    'image/avif': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
+    'image/gif': ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'],
   };
 
   // Fragment class constructor
