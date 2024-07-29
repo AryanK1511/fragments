@@ -521,7 +521,7 @@ describe('POST routes', () => {
 
     test('Should throw a 415 error when the Content-Type header is set as YAML but an image is passed instead', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.jpg');
-      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const fileContent = fs.readFileSync(filePath);
 
       const res = await request(app)
         .post('/v1/fragments')
@@ -605,7 +605,7 @@ describe('POST routes', () => {
 
     test('Should throw a 415 error when the Content-Type header is set a JPEG image but a PNG is passed instead', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.png');
-      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const fileContent = fs.readFileSync(filePath);
 
       const res = await request(app)
         .post('/v1/fragments')
@@ -620,14 +620,14 @@ describe('POST routes', () => {
         error: {
           code: 415,
           message:
-            'Unsupported Content-Type. Invalid image data, Input buffer contains unsupported image format',
+            'Unsupported Content-Type. Invalid image data, Invalid image data, expected jpeg but png was passed instead',
         },
       });
     });
 
     test('Should throw a 415 error when the Content-Type header is set a PNG image but a JPEG is passed instead', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.jpeg');
-      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const fileContent = fs.readFileSync(filePath);
 
       const res = await request(app)
         .post('/v1/fragments')
@@ -642,7 +642,7 @@ describe('POST routes', () => {
         error: {
           code: 415,
           message:
-            'Unsupported Content-Type. Invalid image data, Input buffer contains unsupported image format',
+            'Unsupported Content-Type. Invalid image data, Invalid image data, expected png but jpeg was passed instead',
         },
       });
     });
