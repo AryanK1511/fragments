@@ -3,6 +3,8 @@
 The Fragments Microservice is a scalable, cloud-based API designed for storing, retrieving, and converting small fragments of text, application data and images in various formats. It supports CRUD operations, integrates with existing systems using HTTP REST API, and ensures data security through user authentication.
 
 You can read more about the details and how it works in the [documentation](./_docs/what_is_fragments_microservice.md).
+
+You can also test the microservice using the [fragments UI](https://github.com/AryanK1511/fragments-ui) that was created with the goal of providing a GUI to test this API.
 <br /><br />
 
 <div align="center">
