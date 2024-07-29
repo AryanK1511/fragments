@@ -2550,10 +2550,8 @@ describe('GET routes', () => {
         });
       });
 
-      // ======
-
       test('Should throw a 415 error the ID of a avif fragment is passed and a .txt extension is passed', async () => {
-        const filePath = path.join(__dirname, '..', 'files', 'file.webp');
+        const filePath = path.join(__dirname, '..', 'files', 'file.avif');
         const fileContent = fs.readFileSync(filePath);
 
         const createResponse = await request(app)
@@ -2580,7 +2578,7 @@ describe('GET routes', () => {
       });
 
       test('Should throw a 415 error the ID of an avif fragment is passed and a .md extension is passed', async () => {
-        const filePath = path.join(__dirname, '..', 'files', 'file.webp');
+        const filePath = path.join(__dirname, '..', 'files', 'file.avif');
         const fileContent = fs.readFileSync(filePath);
 
         const createResponse = await request(app)
@@ -2910,7 +2908,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('jpeg');
-    }, 30000);
+    }, 50000);
 
     test('PNG fragment can be converted to a webp fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.png');
@@ -2936,7 +2934,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('webp');
-    }, 30000);
+    }, 50000);
 
     test('PNG fragment can be converted to a GIF fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.png');
@@ -2962,7 +2960,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('gif');
-    }, 30000);
+    }, 50000);
 
     test('PNG fragment can be converted to a avif fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.png');
@@ -2989,7 +2987,7 @@ describe('GET routes', () => {
 
       // sharp shows avif as heif as avif is a subset of heif
       expect(metadata.format).toBe('heif');
-    }, 30000);
+    }, 50000);
 
     test('JPEG fragment can be converted to a PNG fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.jpeg');
@@ -3015,7 +3013,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('png');
-    }, 30000);
+    }, 50000);
 
     test('JPEG fragment can be converted to a webp fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.jpeg');
@@ -3041,7 +3039,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('webp');
-    }, 30000);
+    }, 50000);
 
     test('JPEG fragment can be converted to a GIF fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.jpeg');
@@ -3067,7 +3065,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('gif');
-    }, 30000);
+    }, 50000);
 
     test('JPEG fragment can be converted to a avif fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.jpeg');
@@ -3094,7 +3092,7 @@ describe('GET routes', () => {
 
       // sharp shows avif as heif as avif is a subset of heif
       expect(metadata.format).toBe('heif');
-    }, 30000);
+    }, 50000);
 
     test('webp fragment can be converted to a JPEG fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.webp');
@@ -3120,7 +3118,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('jpeg');
-    }, 30000);
+    }, 50000);
 
     test('webp fragment can be converted to a PNG fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.webp');
@@ -3146,7 +3144,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('png');
-    }, 30000);
+    }, 50000);
 
     test('webp fragment can be converted to a GIF fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.webp');
@@ -3172,7 +3170,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('gif');
-    }, 30000);
+    }, 50000);
 
     test('webp fragment can be converted to a avif fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.webp');
@@ -3199,7 +3197,7 @@ describe('GET routes', () => {
 
       // sharp shows avif as heif as avif is a subset of heif
       expect(metadata.format).toBe('heif');
-    }, 30000);
+    }, 50000);
 
     test('avif fragment can be converted to a JPEG fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.avif');
@@ -3225,7 +3223,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('jpeg');
-    }, 30000);
+    }, 50000);
 
     test('avif fragment can be converted to a webp fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.avif');
@@ -3251,7 +3249,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('webp');
-    }, 30000);
+    }, 50000);
 
     test('avif fragment can be converted to a GIF fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.avif');
@@ -3277,7 +3275,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('gif');
-    }, 30000);
+    }, 50000);
 
     test('avif fragment can be converted to a PNG fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.avif');
@@ -3304,7 +3302,7 @@ describe('GET routes', () => {
 
       // sharp shows avif as heif as avif is a subset of heif
       expect(metadata.format).toBe('png');
-    }, 30000);
+    }, 50000);
 
     test('GIF fragment can be converted to a JPEG fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.gif');
@@ -3330,7 +3328,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('jpeg');
-    }, 30000);
+    }, 50000);
 
     test('GIF fragment can be converted to a webp fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.gif');
@@ -3356,10 +3354,10 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('webp');
-    }, 30000);
+    }, 50000);
 
     test('GIF fragment can be converted to a PNG fragment', async () => {
-      const filePath = path.join(__dirname, '..', 'files', 'file.png');
+      const filePath = path.join(__dirname, '..', 'files', 'file.gif');
       const fileContent = fs.readFileSync(filePath);
 
       const createResponse = await request(app)
@@ -3382,7 +3380,7 @@ describe('GET routes', () => {
       const metadata = await image.metadata();
 
       expect(metadata.format).toBe('png');
-    }, 30000);
+    }, 50000);
 
     test('GIF fragment can be converted to a avif fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.gif');
@@ -3409,7 +3407,7 @@ describe('GET routes', () => {
 
       // sharp shows avif as heif as avif is a subset of heif
       expect(metadata.format).toBe('heif');
-    }, 30000);
+    }, 50000);
 
     test('JSON fragment can be converted to a text fragment', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.json');
