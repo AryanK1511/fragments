@@ -251,6 +251,35 @@ describe('PUT routes', () => {
       });
     });
 
+    test('Should throw a 400 error if an attempt is made to update the fragment using a file with a different type', async () => {
+      const filePath = path.join(__dirname, '..', 'files', 'file.png');
+      const fileContent = fs.readFileSync(filePath);
+
+      const createResponse = await request(app)
+        .post('/v1/fragments')
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'image/png')
+        .send(fileContent);
+
+      expect(createResponse.status).toBe(201);
+
+      const updateResponse = await request(app)
+        .put(`/v1/fragments/${createResponse.body.fragment.id}`)
+        .auth('user1@email.com', 'password1')
+        .set('Content-Type', 'image/png')
+        .send('# Convert text to markdown');
+
+      expect(updateResponse.statusCode).toBe(415);
+      expect(updateResponse.body).toEqual({
+        status: 'error',
+        error: {
+          code: 415,
+          message:
+            'Unsupported Content-Type. Invalid image data, Input buffer contains unsupported image format',
+        },
+      });
+    });
+
     test('Should throw a 400 error if the updated fragment is empty', async () => {
       const filePath = path.join(__dirname, '..', 'files', 'file.txt');
       const fileContent = fs.readFileSync(filePath, 'utf8');
