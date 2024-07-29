@@ -1,6 +1,7 @@
 const logger = require('../../logger');
 const { Fragment } = require('../../model/fragment');
 const contentType = require('content-type');
+const { validateFragment } = require('../../utils/types/typeValidation');
 const { createSuccessResponse, createErrorResponse } = require('../../response');
 
 // ===== Allows users to update a fragment's data =====
@@ -33,6 +34,16 @@ module.exports.updateFragmentData = async (req, res) => {
 
     // Update the new fragment params
     fragment.size = size;
+
+    // Check whether the fragment data matches the content type
+    // If the fragment is invalid, the function throws an error
+    try {
+      await validateFragment(req.body, type);
+    } catch (error) {
+      return res
+        .status(415)
+        .send(createErrorResponse(415, `Unsupported Content-Type. ${error.message}`));
+    }
 
     if (type !== fragment.mimeType) {
       logger.error("A fragment's type can not be changed after it is created.");
