@@ -78,6 +78,8 @@ For more information, check out the following links:
 
 > **NOTE:** You can always configure your own environment variables and then use them to run the docker containers by changing the name of the env file in the `docker-compose.yml` file from `env.testing` to whatever env file you are using. However, for the best testing configuration, I would recommend using the default. The default env file, `env.testing`, configures the containers to use Basic Auth and it also specifies the URLs and credentials so you do not need to do anything.
 
+> **Testing using the [fragments UI](https://github.com/AryanK1511/fragments-ui):** If you are testing this API using the fragments UI, be sure to set the `USE_AWS_AUTH` variable to `true` and also provide the `AWS_COGNITO_POOL_ID` and `AWS_COGNITO_CLIENT_ID` as the UI uses AWS cognito for authentication.
+
 1. Navigate to the root of your repository using your terminal and run the following command.
 
    ```bash
